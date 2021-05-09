@@ -1,6 +1,6 @@
-# LinguaM
+# LinguaF
 
-**LinguaM provides an easy access for researchers and developers to calculate famous computational linguistics measures**
+**LinguaF provides an easy access for researchers and developers to calculate famous computational linguistics measures**
 
 ## Usage
 
