@@ -1,16 +1,13 @@
 import json
-from razdel import tokenize
 from collections import Counter
-# TODO: Pyphen
-import syllables
-import rusyllab
+import pyphen
 from nltk import word_tokenize, pos_tag
 import pymorphy2
 import nltk
 import spacy
 import string
 import re
-from natasha import Segmenter, NewsSyntaxParser, Doc, NewsEmbedding # , NamesExtractor, MorphVocab
+from natasha import Segmenter, NewsSyntaxParser, Doc, NewsEmbedding
 import pathlib
 import os
 
@@ -74,14 +71,12 @@ class LinguisticMeasures:
     def set_remove_stopwords(self, remove_stopwords=False):
         self.__REMOVE_STOPWORDS = remove_stopwords
 
-    @check_params
     def tokenize(self, document, lang='en'):
         stopwords = self.stopwords[lang]
         if self.__REMOVE_STOPWORDS:
             tokens = [t for t in word_tokenize(document) if len(t) > 0 and t.lower() not in stopwords]
         else:
             tokens = [t for t in word_tokenize(document) if len(t) > 0]
-
         return tokens
 
     @check_params
@@ -101,21 +96,19 @@ class LinguisticMeasures:
         ]
 
         for doc in documents:
+            tokens = self.tokenize(doc, lang)
             if lang == 'ru':
-                tokens = self.tokenize(doc, lang)
                 tags = [self.__morph.parse(token)[0].tag.POS for token in tokens]
 
                 for i in range(len(tags)):
                     if tags[i] in morphy_tags:
                         lex_items.append((tokens[i], tags[i]))
             elif lang == 'en':
-                tokens = self.tokenize(doc, lang)
                 tags = pos_tag(tokens)
 
                 for i in range(len(tags)):
                     if tags[i][1] in nltk_tags:
                         lex_items.append((tokens[i], tags[i][1]))
-
         return lex_items
 
     @check_params
@@ -123,41 +116,20 @@ class LinguisticMeasures:
         words = list()
 
         for doc in documents:
-            if lang == 'ru':
-                tokens = self.tokenize(doc)
-                # TODO: optimize by removing stopwords and language sections
-                if self.__REMOVE_STOPWORDS:
-                    stopwords = self.stopwords['ru']
-                    cur_words = [t.text for t in tokens if t.text not in string.punctuation and t.text.lower() not in stopwords]
-                else:
-                    cur_words = [t.text for t in tokens if t.text not in string.punctuation]
-            elif lang == 'en':
-                tokens = word_tokenize(doc)
-
-                if self.__REMOVE_STOPWORDS:
-                    stopwords = self.stopwords['en']
-                    cur_words = [t for t in tokens if t not in string.punctuation and t.lower() not in stopwords]
-                else:
-                    cur_words = [t for t in tokens if t not in string.punctuation]
-
-            words += cur_words  # add retrieved tokens from a question to a global words list
-
+            tokens = self.tokenize(doc, lang=lang)
+            # add retrieved tokens from a question to a global words list
+            words += [t for t in tokens if len(self.remove_punctuation(t)) > 0]
         if len(words) == 0:
             raise Exception(f"No words found in the documents: {documents}.")
 
         return words
 
     @staticmethod
-    @check_params
-    def syllable_count(tokens, lang='en'):
+    def syllable_count(words, lang='en'):
         syl_count = 0
-
-        for token in tokens:
-            if lang == 'ru':
-                syl_count += len(rusyllab.split_word(token))
-            elif lang == 'en':
-                syl_count += syllables.estimate(token)
-
+        dic = pyphen.Pyphen(lang=lang)  # TODO: create in constructor?
+        for word in words:
+            syl_count += len(dic.inserted(word).split('-'))
         return syl_count
 
     @check_params
@@ -174,18 +146,16 @@ class LinguisticMeasures:
     def lexical_density(self, documents, lang='en'):
         words = self.get_words(documents, lang)
         lex_items = self.get_lexical_items(documents, lang)
-
-        return len(lex_items)/len(words)
+        return len(lex_items)/len(words)*100
 
     @check_params
     def type_toke_ratio(self, documents, lang='en'):
         words = self.get_words(documents, lang)
         num_unq = len(Counter(words).keys())
-
-        return num_unq / len(words)
+        return num_unq/len(words)*100
 
     @check_params
-    def calculate_mean_dependency_distance(self, documents, lang='en'):
+    def mean_dependency_distance(self, documents, lang='en'):
         mdds = list()
         for text in documents:
             dd = 0
@@ -208,10 +178,8 @@ class LinguisticMeasures:
     @staticmethod
     def char_count(documents, ignore_spaces=True):
         text = str()
-
         for doc in documents:
             text += doc
-
         if ignore_spaces:
             text = text.replace(" ", "")
         return len(text)
@@ -239,9 +207,8 @@ class LinguisticMeasures:
                 cnt += sent_cnt
         return cnt
 
-    @check_documents
-    def avg_sentence_length(self, documents):
-        return self.char_count(documents)/self.sentence_count(documents)
+    def avg_sentence_length(self, documents, ignore_spaces=True):
+        return self.char_count(documents, ignore_spaces)/self.sentence_count(documents)
 
     @check_params
     def avg_syllables_per_word(self, documents, lang='en'):
