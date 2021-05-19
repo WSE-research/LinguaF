@@ -79,6 +79,17 @@ def syllable_count(words: list, lang: str = 'en') -> int:
     return syl_count
 
 
+def number_of_n_syllable_words(words: list, lang: str = 'en', n: tuple = (1, 2)) -> int:
+    count = 0
+    dic = pyphen.Pyphen(lang=lang)  # TODO: match language
+    for word in words:
+        syl_cnt = len(dic.inserted(word).split('-'))
+        for i in n:
+            if syl_cnt == i:
+                count += 1
+    return count
+
+
 def get_words(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> list:
     words = list()
 
@@ -121,11 +132,11 @@ def sentence_count(documents: list) -> int:
 def avg_word_length(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
     words = get_words(documents, lang, remove_stopwords=remove_stopwords)
     char_cnt = char_count(documents)
-    return char_cnt/words
+    return char_cnt/len(words)
 
 
 def avg_sentence_length(documents: list, ignore_spaces: bool = True) -> float:
-    return char_count(documents, ignore_spaces) / sentence_count(documents)
+    return char_count(documents, ignore_spaces)/sentence_count(documents)
 
 
 def get_ngrams(
@@ -145,7 +156,7 @@ def get_ngrams(
     return ngrams
 
 
-def get_lexical_items(documents, remove_stopwords=False, lang='en'):
+def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str = 'en') -> list:
     """
     Lexical items are: nouns, adjectives, verbs, adverbs
     """
@@ -177,3 +188,8 @@ def get_lexical_items(documents, remove_stopwords=False, lang='en'):
                 if tags[i][1] in nltk_tags:
                     lex_items.append((tokens[i], tags[i][1]))
     return lex_items
+
+
+def words_per_sentence(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> list:
+    words = get_words(documents, lang, remove_stopwords)
+    return len(words)/sentence_count(documents)
