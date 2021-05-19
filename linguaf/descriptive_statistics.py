@@ -32,14 +32,30 @@ for language in SUPPORTED_LANGS:
 
 
 def remove_punctuation(text: str) -> str:
+    """Remove punctuation from text string.
+
+    Keyword arguments:
+    text -- the string from which the punctuation is removed
+    """
     return ''.join(ch for ch in text if ch not in PUNCTUATION)
 
 
 def remove_digits(text: str) -> str:
+    """Remove digits from text string.
+
+    Keyword arguments:
+    text -- the string from which the digits are removed
+    """
     return ''.join(ch for ch in text if ch not in string.digits)
 
 
 def char_count(documents: list, ignore_spaces: bool = True) -> int:
+    """Count characters in a list of documents.
+
+    Keyword arguments:
+    documents -- list of textual documents.
+    ignore_spaces -- boolean flag that shows if we should ignore spaces
+    """
     text = str()
     for doc in documents:
         text += doc
@@ -49,6 +65,13 @@ def char_count(documents: list, ignore_spaces: bool = True) -> int:
 
 
 def letter_count(documents: list, ignore_spaces: bool = True, ignore_digits: bool = True) -> int:
+    """Count letters in a list of documents
+
+    Keyword arguments:
+    documents -- list of textual documents.
+    ignore_spaces -- boolean flag that shows if we should ignore spaces
+    ignore_digits -- boolean flag that shows if we should ignore digits
+    """
     text = str()
     for doc in documents:
         text += doc
@@ -60,18 +83,34 @@ def letter_count(documents: list, ignore_spaces: bool = True, ignore_digits: boo
 
 
 def punctuation_count(documents: list) -> int:
+    """Count number of punctuation characters in a list of textual documents
+
+    Keyword arguments:
+    documents -- the list of textual documents.
+    """
     char_cnt = char_count(documents, ignore_spaces=True)
     char_wo_punctuation = letter_count(documents, ignore_spaces=True, ignore_digits=False)
     return char_cnt - char_wo_punctuation
 
 
 def digit_count(documents: list) -> int:
+    """Count number of digits in a list of textual documents
+
+    Keyword arguments:
+    documents -- the list of textual documents.
+    """
     letters_w_digits = letter_count(documents, ignore_spaces=False, ignore_digits=False)
     letters_wo_digits = letter_count(documents, ignore_spaces=False, ignore_digits=True)
     return letters_w_digits - letters_wo_digits
 
 
 def syllable_count(words: list, lang: str = 'en') -> int:
+    """Count number of syllables in a list of words
+
+    Keyword arguments:
+    words -- the list of words
+    lang -- language of the words
+    """
     syl_count = 0
     dic = pyphen.Pyphen(lang=lang)  # TODO: match language
     for word in words:
@@ -80,6 +119,13 @@ def syllable_count(words: list, lang: str = 'en') -> int:
 
 
 def number_of_n_syllable_words(words: list, lang: str = 'en', n: tuple = (1, 2)) -> int:
+    """Count number of words with x <= n < y syllable words in a list of words
+
+    Keyword arguments:
+    words -- the list of words
+    lang -- language of the words
+    n -- tuple: (x, y)
+    """
     count = 0
     dic = pyphen.Pyphen(lang=lang)  # TODO: match language
     for word in words:
@@ -91,6 +137,13 @@ def number_of_n_syllable_words(words: list, lang: str = 'en', n: tuple = (1, 2))
 
 
 def get_words(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> list:
+    """Create list of words based on a list of textual documents.
+
+    Keyword arguments:
+    documents -- the list of textual documents
+    lang -- language of the words
+    remove_stopwords -- boolean flag that shows if the function should exclude stopwords
+    """
     words = list()
 
     for doc in documents:
@@ -104,6 +157,13 @@ def get_words(documents: list, lang: str = 'en', remove_stopwords: bool = False)
 
 
 def tokenize(document: str, remove_stopwords: bool = False, lang: str = 'en') -> list:
+    """Create list of tokens based on a list of textual documents.
+
+    Keyword arguments:
+    documents -- the list of textual documents
+    lang -- language of the words
+    remove_stopwords -- boolean flag that shows if the function should exclude stopwords
+    """
     stopwords = STOPWORDS[lang]
     if remove_stopwords:
         tokens = [t for t in word_tokenize(document) if len(t) > 0 and t.lower() not in stopwords]
@@ -113,12 +173,24 @@ def tokenize(document: str, remove_stopwords: bool = False, lang: str = 'en') ->
 
 
 def avg_syllable_per_word(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
+    """Count average number of syllables per word based on a list of textual documents.
+
+    Keyword arguments:
+    documents -- the list of textual documents
+    lang -- language of the words
+    remove_stopwords -- boolean flag that shows if the function should exclude stopwords
+    """
     words = get_words(documents, lang, remove_stopwords=remove_stopwords)
     syl_count = syllable_count(words, lang)
     return syl_count / len(words)
 
 
 def sentence_count(documents: list) -> int:
+    """Count number of sentences in a list of textual documents
+
+    Keyword arguments:
+    documents -- the list of textual documents.
+    """
     cnt = 0
     for doc in documents:
         sent_cnt = len([t for t in re.split(r'[.!?\.]+', doc) if len(t) > 0])
@@ -130,12 +202,25 @@ def sentence_count(documents: list) -> int:
 
 
 def avg_word_length(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
+    """Count average word length based on a list of textual documents.
+
+    Keyword arguments:
+    documents -- the list of textual documents
+    lang -- language of the words
+    remove_stopwords -- boolean flag that shows if the function should exclude stopwords
+    """
     words = get_words(documents, lang, remove_stopwords=remove_stopwords)
     char_cnt = char_count(documents)
     return char_cnt/len(words)
 
 
 def avg_sentence_length(documents: list, ignore_spaces: bool = True) -> float:
+    """Count average sentence length in a list of documents.
+
+    Keyword arguments:
+    documents -- list of textual documents.
+    ignore_spaces -- boolean flag that shows if we should ignore spaces
+    """
     return char_count(documents, ignore_spaces)/sentence_count(documents)
 
 
@@ -146,6 +231,15 @@ def get_ngrams(
         remove_stopwords: bool = True,
         output_count: bool = True
 ) -> list:
+    """Retrieve a list of ngrams based on a list of textual documents.
+
+    Keyword arguments:
+    documents -- the list of textual documents
+    n -- the "n" parameter in "ngram"
+    lang -- language of the words
+    remove_stopwords -- boolean flag that shows if the function should exclude stopwords
+    output_count -- boolean flag that shows if the function should return ngram occurrences
+    """
     words = get_words(documents, lang, remove_stopwords=remove_stopwords)
     ngrams = list()
     for i in range(0, len(words), 1):
@@ -157,8 +251,13 @@ def get_ngrams(
 
 
 def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str = 'en') -> list:
-    """
-    Lexical items are: nouns, adjectives, verbs, adverbs
+    """Retrieve a list of lexical items (types) based on a list of textual documents.
+    Lexical items (types) are: nouns, adjectives, verbs, adverbs
+
+    Keyword arguments:
+    documents -- the list of textual documents
+    lang -- language of the words
+    remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
     morph = pymorphy2.MorphAnalyzer()
 
@@ -191,5 +290,12 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
 
 
 def words_per_sentence(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> list:
+    """Calculate average number of words in a sentence based on a list of documents.
+
+    Keyword arguments:
+    documents -- the list of textual documents
+    lang -- language of the words
+    remove_stopwords -- boolean flag that shows if the function should exclude stopwords
+    """
     words = get_words(documents, lang, remove_stopwords)
     return len(words)/sentence_count(documents)
