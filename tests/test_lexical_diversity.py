@@ -72,13 +72,13 @@ def test_type_token_ratio():
 
     for d in ttr_data_ru:
         cnt = d[1]
-        res = int(ld.type_toke_ratio(d[0], 'ru', True))
+        res = int(ld.type_token_ratio(d[0], 'ru', True))
 
         assert cnt == res
 
     for d in ttr_data_en:
         cnt = d[1]
-        res = int(ld.type_toke_ratio(d[0], 'en', True))
+        res = int(ld.type_token_ratio(d[0], 'en', True))
 
         assert cnt == res
 

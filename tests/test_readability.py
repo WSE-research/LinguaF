@@ -31,13 +31,13 @@ def test_flesh_reading_ease():
 
     for d in fre_data_ru:
         fre = d[1]
-        res = int(r.flesh_reading_ease(d[0], 'ru', False))
+        res = int(r.flesch_reading_ease(d[0], 'ru', False))
 
         assert fre == res
 
     for d in fre_data_en:
         fre = d[1]
-        res = int(r.flesh_reading_ease(d[0], 'en', False))
+        res = int(r.flesch_reading_ease(d[0], 'en', False))
 
         assert fre == res
 
@@ -72,13 +72,13 @@ def test_flesh_kincaid_grade():
 
     for d in read_data_ru:
         score = d[1]
-        res = int(r.flesh_kincaid_grade(d[0], 'ru', False))
+        res = int(r.flesch_kincaid_grade(d[0], 'ru', False))
 
         assert score == res
 
     for d in read_data_en:
         score = d[1]
-        res = int(r.flesh_kincaid_grade(d[0], 'en', False))
+        res = int(r.flesch_kincaid_grade(d[0], 'en', False))
 
         assert score == res
 

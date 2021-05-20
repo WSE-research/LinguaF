@@ -201,6 +201,18 @@ def sentence_count(documents: list) -> int:
     return cnt
 
 
+def get_sentences(documents: list) -> list:
+    """Convert a list of textual documents into a list of sentences.
+
+    Keyword arguments:
+    documents -- the list of textual documents.
+    """
+    sentences = list()
+    for doc in documents:
+        sentences += [t for t in re.split(r'[.!?\.]+', doc) if len(t) > 0]
+    return sentences
+
+
 def avg_word_length(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
     """Count average word length based on a list of textual documents.
 
