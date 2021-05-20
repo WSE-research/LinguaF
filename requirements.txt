@@ -1,6 +1,6 @@
-nltk==3.2.5
-spacy==2.1.3
-setuptools==49.6.0
-natasha==1.3.0
-Pyphen==0.10.0
-pymorphy2==0.8
+nltk
+spacy
+setuptools
+natasha
+Pyphen
+pymorphy2

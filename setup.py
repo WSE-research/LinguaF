@@ -21,7 +21,7 @@ def read_requirements():
 
 setuptools.setup(
     name="linguaf",
-    version="0.0.1",
+    version="0.0.6",
     author="Aleksandr Perevalov",
     author_email="perevalovproduction@gmail.com",
     description="Python package for calculating famous measures in computational linguistics",
@@ -29,7 +29,6 @@ setuptools.setup(
     license="MIT",
     long_description_content_type="text/markdown",
     url="https://github.com/Perevalov/LinguaF",
-    packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
@@ -40,6 +39,8 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    packages=setuptools.find_packages(),
+    package_data={"": ["resources/stopwords/*.json"]},
     keywords="language features computational linguistics quantitative text analysis",
     **read_requirements()
 )
