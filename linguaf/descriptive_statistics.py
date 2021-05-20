@@ -1,26 +1,18 @@
 import os
 import re
 import pathlib
-import json
 import string
 import pyphen
 import pymorphy2
 from nltk import word_tokenize, pos_tag
 import collections
+from linguaf import SUPPORTED_LANGS, __load_json, __check_bool_param, __check_documents_param, __check_lang_param, \
+    __check_text_param, __check_words_param
 
 
 PUNCTUATION = r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~—«»"""
-
-
-def __load_json(filepath):
-    data = None
-    with open(filepath) as f:
-        data = json.load(f)
-    return data
-
-
-SUPPORTED_LANGS = ['en', 'ru']
 STOPWORDS = dict()
+
 
 for language in SUPPORTED_LANGS:
     STOPWORDS[language] = __load_json(
@@ -37,6 +29,8 @@ def remove_punctuation(text: str) -> str:
     Keyword arguments:
     text -- the string from which the punctuation is removed
     """
+    __check_text_param(text)
+
     return ''.join(ch for ch in text if ch not in PUNCTUATION)
 
 
@@ -46,6 +40,8 @@ def remove_digits(text: str) -> str:
     Keyword arguments:
     text -- the string from which the digits are removed
     """
+    __check_text_param(text)
+
     return ''.join(ch for ch in text if ch not in string.digits)
 
 
@@ -56,6 +52,9 @@ def char_count(documents: list, ignore_spaces: bool = True) -> int:
     documents -- list of textual documents.
     ignore_spaces -- boolean flag that shows if we should ignore spaces
     """
+    __check_documents_param(documents)
+    __check_bool_param(ignore_spaces)
+
     text = str()
     for doc in documents:
         text += doc
@@ -72,6 +71,10 @@ def letter_count(documents: list, ignore_spaces: bool = True, ignore_digits: boo
     ignore_spaces -- boolean flag that shows if we should ignore spaces
     ignore_digits -- boolean flag that shows if we should ignore digits
     """
+    __check_documents_param(documents)
+    __check_bool_param(ignore_spaces)
+    __check_bool_param(ignore_digits)
+
     text = str()
     for doc in documents:
         text += doc
@@ -88,6 +91,8 @@ def punctuation_count(documents: list) -> int:
     Keyword arguments:
     documents -- the list of textual documents.
     """
+    __check_documents_param(documents)
+
     char_cnt = char_count(documents, ignore_spaces=True)
     char_wo_punctuation = letter_count(documents, ignore_spaces=True, ignore_digits=False)
     return char_cnt - char_wo_punctuation
@@ -99,6 +104,7 @@ def digit_count(documents: list) -> int:
     Keyword arguments:
     documents -- the list of textual documents.
     """
+    __check_documents_param(documents)
     letters_w_digits = letter_count(documents, ignore_spaces=False, ignore_digits=False)
     letters_wo_digits = letter_count(documents, ignore_spaces=False, ignore_digits=True)
     return letters_w_digits - letters_wo_digits
@@ -111,6 +117,7 @@ def syllable_count(words: list, lang: str = 'en') -> int:
     words -- the list of words
     lang -- language of the words
     """
+    __check_words_param(words)
     syl_count = 0
     dic = pyphen.Pyphen(lang=lang)  # TODO: match language
     for word in words:
@@ -126,6 +133,11 @@ def number_of_n_syllable_words(words: list, lang: str = 'en', n: tuple = (1, 2))
     lang -- language of the words
     n -- tuple: (x, y)
     """
+    __check_words_param(words)
+    __check_lang_param(lang)
+    if n[0] < 1 or n[1] <= n[0]:
+        raise ValueError(f"The given n parameter isn't correct: {n}. n=tuple(x,y), x>0, y>x.")
+
     count = 0
     dic = pyphen.Pyphen(lang=lang)  # TODO: match language
     for word in words:
@@ -144,6 +156,10 @@ def get_words(documents: list, lang: str = 'en', remove_stopwords: bool = False)
     lang -- language of the words
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = list()
 
     for doc in documents:
@@ -156,7 +172,7 @@ def get_words(documents: list, lang: str = 'en', remove_stopwords: bool = False)
     return words
 
 
-def tokenize(document: str, remove_stopwords: bool = False, lang: str = 'en') -> list:
+def tokenize(text: str, remove_stopwords: bool = False, lang: str = 'en') -> list:
     """Create list of tokens based on a list of textual documents.
 
     Keyword arguments:
@@ -164,11 +180,15 @@ def tokenize(document: str, remove_stopwords: bool = False, lang: str = 'en') ->
     lang -- language of the words
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_text_param(text)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     stopwords = STOPWORDS[lang]
     if remove_stopwords:
-        tokens = [t for t in word_tokenize(document) if len(t) > 0 and t.lower() not in stopwords]
+        tokens = [t for t in word_tokenize(text) if len(t) > 0 and t.lower() not in stopwords]
     else:
-        tokens = [t for t in word_tokenize(document) if len(t) > 0]
+        tokens = [t for t in word_tokenize(text) if len(t) > 0]
     return tokens
 
 
@@ -180,6 +200,10 @@ def avg_syllable_per_word(documents: list, lang: str = 'en', remove_stopwords: b
     lang -- language of the words
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = get_words(documents, lang, remove_stopwords=remove_stopwords)
     syl_count = syllable_count(words, lang)
     return syl_count / len(words)
@@ -191,6 +215,7 @@ def sentence_count(documents: list) -> int:
     Keyword arguments:
     documents -- the list of textual documents.
     """
+    __check_documents_param(documents)
     cnt = 0
     for doc in documents:
         sent_cnt = len([t for t in re.split(r'[.!?\.]+', doc) if len(t) > 0])
@@ -207,6 +232,8 @@ def get_sentences(documents: list) -> list:
     Keyword arguments:
     documents -- the list of textual documents.
     """
+    __check_documents_param(documents)
+
     sentences = list()
     for doc in documents:
         sentences += [t for t in re.split(r'[.!?\.]+', doc) if len(t) > 0]
@@ -221,6 +248,10 @@ def avg_word_length(documents: list, lang: str = 'en', remove_stopwords: bool = 
     lang -- language of the words
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = get_words(documents, lang, remove_stopwords=remove_stopwords)
     char_cnt = char_count(documents)
     return char_cnt/len(words)
@@ -233,6 +264,9 @@ def avg_sentence_length(documents: list, ignore_spaces: bool = True) -> float:
     documents -- list of textual documents.
     ignore_spaces -- boolean flag that shows if we should ignore spaces
     """
+    __check_documents_param(documents)
+    __check_bool_param(ignore_spaces)
+
     return char_count(documents, ignore_spaces)/sentence_count(documents)
 
 
@@ -252,6 +286,13 @@ def get_ngrams(
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     output_count -- boolean flag that shows if the function should return ngram occurrences
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+    __check_bool_param(output_count)
+    if n < 1:
+        raise ValueError(f"The n parameter should be more than 0. Got: {n}")
+
     words = get_words(documents, lang, remove_stopwords=remove_stopwords)
     ngrams = list()
     for i in range(0, len(words), 1):
@@ -271,6 +312,10 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
     lang -- language of the words
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     morph = pymorphy2.MorphAnalyzer()
 
     lex_items = list()
@@ -285,7 +330,7 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
     ]
 
     for doc in documents:
-        tokens = tokenize(document=doc, remove_stopwords=remove_stopwords, lang=lang)
+        tokens = tokenize(text=doc, remove_stopwords=remove_stopwords, lang=lang)
         if lang == 'ru':
             tags = [morph.parse(token)[0].tag.POS for token in tokens]
 
@@ -309,5 +354,9 @@ def words_per_sentence(documents: list, lang: str = 'en', remove_stopwords: bool
     lang -- language of the words
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = get_words(documents, lang, remove_stopwords)
     return len(words)/sentence_count(documents)

@@ -96,7 +96,7 @@ def test_tokenize_stopwords():
         cnt = ru_tokens[i][1]
         true_tokens = ru_tokens[i][2]
 
-        tokens = ds.tokenize(document=ru_tokens[i][0], lang='ru', remove_stopwords=False)
+        tokens = ds.tokenize(text=ru_tokens[i][0], lang='ru', remove_stopwords=False)
 
         assert len(tokens) == cnt
         assert tokens == true_tokens
@@ -105,7 +105,7 @@ def test_tokenize_stopwords():
         cnt = en_tokens[i][1]
         true_tokens = en_tokens[i][2]
 
-        tokens = ds.tokenize(document=en_tokens[i][0], lang='en', remove_stopwords=False)
+        tokens = ds.tokenize(text=en_tokens[i][0], lang='en', remove_stopwords=False)
 
         assert len(tokens) == cnt
         assert tokens == true_tokens
@@ -152,7 +152,7 @@ def test_tokenize_remove_stopwords():
         cnt = ru_tokens[i][1]
         true_tokens = ru_tokens[i][2]
 
-        tokens = ds.tokenize(document=ru_tokens[i][0], lang='ru', remove_stopwords=True)
+        tokens = ds.tokenize(text=ru_tokens[i][0], lang='ru', remove_stopwords=True)
 
         assert len(tokens) == cnt
         assert tokens == true_tokens
@@ -161,7 +161,7 @@ def test_tokenize_remove_stopwords():
         cnt = en_tokens[i][1]
         true_tokens = en_tokens[i][2]
 
-        tokens = ds.tokenize(document=en_tokens[i][0], lang='en', remove_stopwords=True)
+        tokens = ds.tokenize(text=en_tokens[i][0], lang='en', remove_stopwords=True)
 
         assert len(tokens) == cnt
         assert tokens == true_tokens

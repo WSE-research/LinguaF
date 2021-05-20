@@ -1,4 +1,5 @@
 from linguaf.descriptive_statistics import get_sentences
+from linguaf import __check_documents_param, __check_lang_param
 from natasha import Segmenter, NewsSyntaxParser, Doc, NewsEmbedding
 import spacy
 
@@ -13,6 +14,8 @@ def mean_dependency_distance(documents: list, lang: str = 'en') -> float:
     documents -- the list of textual documents
     lang -- language of the textual documents
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
 
     mdds = list()
     sentences = get_sentences(documents)

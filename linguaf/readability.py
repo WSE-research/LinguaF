@@ -1,5 +1,7 @@
-from linguaf.descriptive_statistics import get_words, syllable_count, avg_sentence_length, avg_word_length, \
+from linguaf.descriptive_statistics import get_words, syllable_count, avg_word_length, \
     number_of_n_syllable_words, sentence_count, words_per_sentence
+from linguaf import __check_bool_param, __check_documents_param, __check_lang_param, \
+    __check_text_param, __check_words_param
 
 
 def flesch_reading_ease(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
@@ -13,6 +15,10 @@ def flesch_reading_ease(documents: list, lang: str = 'en', remove_stopwords: boo
     lang -- language of the textual documents
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = get_words(documents, lang, remove_stopwords)
     asl = words_per_sentence(documents, lang, remove_stopwords)
     syl_total = syllable_count(words, lang)
@@ -34,6 +40,10 @@ def flesch_kincaid_grade(documents: list, lang: str = 'en', remove_stopwords: bo
     lang -- language of the textual documents
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = get_words(documents, lang, remove_stopwords)
     asl = words_per_sentence(documents)
     syl_total = syllable_count(words, lang)
@@ -56,6 +66,10 @@ def automated_readability_index(documents: list, lang: str = 'en', remove_stopwo
     lang -- language of the textual documents
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     asl = words_per_sentence(documents, lang, remove_stopwords)
     awl = avg_word_length(documents, lang, remove_stopwords)
 
@@ -73,6 +87,10 @@ def automated_readability_index_simple(documents: list, lang: str = 'en', remove
     lang -- language of the textual documents
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     asl = words_per_sentence(documents, lang, remove_stopwords)
     awl = avg_word_length(documents, lang, remove_stopwords)
 
@@ -88,6 +106,10 @@ def coleman_readability(documents: list, lang: str = 'en', remove_stopwords: boo
     lang -- language of the textual documents
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = get_words(documents, lang, remove_stopwords)
     nws_one = number_of_n_syllable_words(words, lang, (1, 2))
 
@@ -103,6 +125,10 @@ def easy_listening(documents: list, lang: str = 'en', remove_stopwords: bool = F
     lang -- language of the textual documents
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     nst = sentence_count(documents)
     words = get_words(documents, lang, remove_stopwords)
     nws_more_two = number_of_n_syllable_words(words, lang, (2, 15))

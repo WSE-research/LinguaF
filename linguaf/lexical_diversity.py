@@ -1,6 +1,7 @@
 import collections
 import math
 from linguaf.descriptive_statistics import get_words, get_lexical_items
+from linguaf import __check_bool_param, __check_documents_param, __check_lang_param
 
 
 def lexical_density(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
@@ -13,6 +14,10 @@ def lexical_density(documents: list, lang: str = 'en', remove_stopwords: bool = 
     lang -- language of the textual documents
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = get_words(documents=documents, lang=lang, remove_stopwords=remove_stopwords)
     lex_items = get_lexical_items(documents=documents, remove_stopwords=remove_stopwords, lang=lang)
     return len(lex_items)/len(words)*100
@@ -28,6 +33,10 @@ def type_token_ratio(documents: list, lang: str = 'en', remove_stopwords: bool =
     lang -- language of the textual documents
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = get_words(documents=documents, lang=lang, remove_stopwords=remove_stopwords)
     num_unq = len(collections.Counter(words).keys())
     return num_unq/len(words)*100
@@ -43,6 +52,10 @@ def log_type_token_ratio(documents: list, lang: str = 'en', remove_stopwords: bo
     lang -- language of the textual documents
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = get_words(documents=documents, lang=lang, remove_stopwords=remove_stopwords)
     num_unq = len(collections.Counter(words).keys())
     return math.log(num_unq)/math.log(len(words))*100
@@ -57,6 +70,10 @@ def summer_index(documents: list, lang: str = 'en', remove_stopwords: bool = Fal
     lang -- language of the textual documents
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = get_words(documents=documents, lang=lang, remove_stopwords=remove_stopwords)
     num_unq = len(collections.Counter(words).keys())
     if num_unq == 0:
@@ -73,6 +90,10 @@ def root_type_token_ratio(documents: list, lang: str = 'en', remove_stopwords: b
     lang -- language of the textual documents
     remove_stopwords -- boolean flag that shows if the function should exclude stopwords
     """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+    __check_bool_param(remove_stopwords)
+
     words = get_words(documents=documents, lang=lang, remove_stopwords=remove_stopwords)
     num_unq = len(collections.Counter(words).keys())
     return num_unq/(len(words)**0.5)*100
