@@ -36,7 +36,7 @@ def mean_dependency_distance(documents: list, lang: str = 'en') -> float:
             except:
                 spacy.cli.download('en_core_web_sm')  # required for english language
                 nlp = spacy.load("en_core_web_sm")
-                
+
             doc = nlp(text)
             for token in doc:
                 dd += abs(token.head.i - token.i)

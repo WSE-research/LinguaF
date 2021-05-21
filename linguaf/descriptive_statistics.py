@@ -5,10 +5,16 @@ import string
 import pyphen
 import pymorphy2
 from nltk import word_tokenize, pos_tag
+import nltk
 import collections
 from linguaf import SUPPORTED_LANGS, __load_json, __check_bool_param, __check_documents_param, __check_lang_param, \
     __check_text_param, __check_words_param
 
+
+try:
+    nltk.data.find('tokenizers/punkt')
+except:
+    nltk.download('punkt')
 
 PUNCTUATION = r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~—«»"""
 STOPWORDS = dict()
