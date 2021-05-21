@@ -11,4 +11,4 @@ test:
 	pytest
 
 upload:
-	twine upload --repository testpypi dist/*
+	twine upload dist/*

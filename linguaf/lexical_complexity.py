@@ -40,7 +40,7 @@ def mean_dependency_distance(documents: list, lang: str = 'en') -> float:
             doc = nlp(text)
             for token in doc:
                 dd += abs(token.head.i - token.i)
-            mdd = dd/(len(doc) - 1)
+            mdd = dd/(len(doc) - 1) if (len(doc) - 1) != 0 else 0
         mdds.append(mdd)
 
     return sum(mdds)/len(mdds)

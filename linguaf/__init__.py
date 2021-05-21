@@ -1,6 +1,7 @@
 import json
 
 SUPPORTED_LANGS = ['en', 'ru']
+__version__ = '0.0.8b'
 
 
 def __load_json(filepath):
