@@ -13,8 +13,10 @@ from linguaf import SUPPORTED_LANGS, __load_json, __check_bool_param, __check_do
 
 try:
     nltk.data.find('tokenizers/punkt')
+    nltk.data.find('taggers/averaged_perceptron_tagger')
 except:
     nltk.download('punkt')
+    nltk.download('averaged_perceptron_tagger')
 
 PUNCTUATION = r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~—«»"""
 STOPWORDS = dict()
