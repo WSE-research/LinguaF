@@ -1,6 +1,6 @@
 # LinguaF
 
-![Version](https://img.shields.io/pypi/v/linguaf?logo=pypi&logoColor=FFE873)
+![Version](https://img.shields.io/pypi/v/linguaf?logo=pypi)
 ![Downloads](https://img.shields.io/pypi/dm/linguaf)
 ![Repo size](https://img.shields.io/github/repo-size/perevalov/linguaf)
 
