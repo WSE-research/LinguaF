@@ -1,7 +1,6 @@
 from linguaf.descriptive_statistics import get_words, syllable_count, avg_word_length, \
     number_of_n_syllable_words, sentence_count, words_per_sentence
-from linguaf import __check_bool_param, __check_documents_param, __check_lang_param, \
-    __check_text_param, __check_words_param
+from linguaf import __check_bool_param, __check_documents_param, __check_lang_param
 
 
 def flesch_reading_ease(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
