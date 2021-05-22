@@ -74,7 +74,9 @@ At the moment, library supports English and Russian languages for all the method
 
 ## Open API
 
-TBD
+The Swagger UI of the API is located here: http://webengineering.ins.hs-anhalt.de:41008/docs
+
+There is currently a request limit set up for 50 requests per minute. If you are beyond the limit, requests are moved to the queue.
 
 ## Citation
 
