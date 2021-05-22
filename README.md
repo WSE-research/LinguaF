@@ -1,5 +1,9 @@
 # LinguaF
 
+![Version](https://img.shields.io/pypi/v/linguaf?logo=pypi&logoColor=FFE873)
+![Downloads](https://img.shields.io/pypi/dm/linguaf)
+![Repo size](https://img.shields.io/github/repo-size/perevalov/linguaf)
+
 **LinguaF provides an easy access for researchers and developers to methods of quantitative language analysis, such as: readability, complexity, diversity, and other descriptive statistics.**
 
 ## Usage
