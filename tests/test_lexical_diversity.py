@@ -72,13 +72,13 @@ def test_type_token_ratio():
 
     for d in ttr_data_ru:
         cnt = d[1]
-        res = int(ld.type_token_ratio(d[0], 'ru', True))
+        res = int(ld.type_token_ratio(d[0], 'ru', True)*100)
 
         assert cnt == res
 
     for d in ttr_data_en:
         cnt = d[1]
-        res = int(ld.type_token_ratio(d[0], 'en', True))
+        res = int(ld.type_token_ratio(d[0], 'en', True)*100)
 
         assert cnt == res
 
@@ -113,13 +113,13 @@ def test_log_type_token_ratio():
 
     for d in ttr_data_ru:
         cnt = d[1]
-        res = int(ld.log_type_token_ratio(d[0], 'ru', True))
+        res = int(ld.log_type_token_ratio(d[0], 'ru', True)*100)
 
         assert cnt == res
 
     for d in ttr_data_en:
         cnt = d[1]
-        res = int(ld.log_type_token_ratio(d[0], 'en', True))
+        res = int(ld.log_type_token_ratio(d[0], 'en', True)*100)
 
         assert cnt == res
 
@@ -154,13 +154,13 @@ def test_summer_index():
 
     for d in ttr_data_ru:
         cnt = d[1]
-        res = int(ld.summer_index(d[0], 'ru', True))
+        res = int(ld.summer_index(d[0], 'ru', True)*100)
 
         assert cnt == res
 
     for d in ttr_data_en:
         cnt = d[1]
-        res = int(ld.summer_index(d[0], 'en', True))
+        res = int(ld.summer_index(d[0], 'en', True)*100)
 
         assert cnt == res
 
@@ -195,12 +195,12 @@ def test_root_type_token_ratio():
 
     for d in ttr_data_ru:
         cnt = d[1]
-        res = int(ld.root_type_token_ratio(d[0], 'ru', True))
+        res = int(ld.root_type_token_ratio(d[0], 'ru', True)*100)
 
         assert cnt == res
 
     for d in ttr_data_en:
         cnt = d[1]
-        res = int(ld.root_type_token_ratio(d[0], 'en', True))
+        res = int(ld.root_type_token_ratio(d[0], 'en', True)*100)
 
         assert cnt == res
