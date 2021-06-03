@@ -1,4 +1,4 @@
-from linguaf import lexical_complexity as lc
+from linguaf import syntactical_complexity as lc
 
 
 def test_mean_dependency_distance():
@@ -8,12 +8,12 @@ def test_mean_dependency_distance():
              "То есть, в результате применения к векторному полю операции дифференцирования получается скалярное поле.",
              "Она определяет (для каждой точки), «насколько расходится входящее и исходящее из малой окрестности данной точки поле»",
              "Точнее, насколько расходятся входящий и исходящий потоки."
-         ], 2),
+         ], 3),
         ([
              "«Лунтик и его друзья» — российский мультсериал, ориентированный на семейную и детскую аудиторию.",
              "Транслируется на телевидении с 1 сентября 2006 года по настоящее время.",
              "Ключевой темой стали приключения маленького пушистого существа Лунтика — космического пришельца, который родился на Луне."
-         ], 2)
+         ], 3)
     ]
 
     ttr_data_en = [
@@ -26,7 +26,7 @@ def test_mean_dependency_distance():
              "The title character is a purple furry alien named Luntik/Moonzy.",
              "In the first episode Moonzy is shown hatching from an egg on the moon and then falling to Earth.",
              "All of the following series take place at a forest glade near a pond where Moonzy finds a new home."
-         ], 2)
+         ], 3)
     ]
 
     for d in ttr_data_ru:

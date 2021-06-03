@@ -1,4 +1,4 @@
-from linguaf.descriptive_statistics import get_sentences
+from linguaf.descriptive_statistics import get_sentences, get_words
 from linguaf import __check_documents_param, __check_lang_param
 from natasha import Segmenter, NewsSyntaxParser, Doc, NewsEmbedding
 import spacy
@@ -15,11 +15,12 @@ def mean_dependency_distance(documents: list, lang: str = 'en') -> float:
     __check_documents_param(documents)
     __check_lang_param(lang)
 
-    mdds = list()
+    dd = 0
     sentences = get_sentences(documents)
+    words = get_words(documents, lang)
 
     for text in sentences:
-        dd = 0
+
         if lang == 'ru':
             segmenter = Segmenter()
             emb = NewsEmbedding()
@@ -40,7 +41,5 @@ def mean_dependency_distance(documents: list, lang: str = 'en') -> float:
             doc = nlp(text)
             for token in doc:
                 dd += abs(token.head.i - token.i)
-            mdd = dd/(len(doc) - 1) if (len(doc) - 1) != 0 else 0
-        mdds.append(mdd)
 
-    return sum(mdds)/len(mdds)
+    return dd/(len(words) - len(sentences))

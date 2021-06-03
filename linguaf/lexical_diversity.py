@@ -39,7 +39,7 @@ def type_token_ratio(documents: list, lang: str = 'en', remove_stopwords: bool =
 
     words = get_words(documents=documents, lang=lang, remove_stopwords=remove_stopwords)
     num_unq = len(collections.Counter(words).keys())
-    return num_unq/len(words)*100
+    return num_unq/len(words)
 
 
 def log_type_token_ratio(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
@@ -58,7 +58,7 @@ def log_type_token_ratio(documents: list, lang: str = 'en', remove_stopwords: bo
 
     words = get_words(documents=documents, lang=lang, remove_stopwords=remove_stopwords)
     num_unq = len(collections.Counter(words).keys())
-    return math.log(num_unq)/math.log(len(words))*100
+    return math.log(num_unq)/math.log(len(words))
 
 
 def summer_index(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
@@ -78,7 +78,7 @@ def summer_index(documents: list, lang: str = 'en', remove_stopwords: bool = Fal
     num_unq = len(collections.Counter(words).keys())
     if num_unq == 0:
         num_unq = 10**-10
-    return math.log(math.log(num_unq))/math.log(math.log(len(words)))*100
+    return math.log(math.log(num_unq))/math.log(math.log(len(words)))
 
 
 def root_type_token_ratio(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
@@ -96,4 +96,4 @@ def root_type_token_ratio(documents: list, lang: str = 'en', remove_stopwords: b
 
     words = get_words(documents=documents, lang=lang, remove_stopwords=remove_stopwords)
     num_unq = len(collections.Counter(words).keys())
-    return num_unq/(len(words)**0.5)*100
+    return num_unq/(len(words)**0.5)
