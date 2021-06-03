@@ -26,13 +26,13 @@ ds.words_per_sentence(documents)
 # Output: 15
 ```
 
-### Lexical Complexity
+### Syntactical Complexity
 
 ```python
-from linguaf import lexical_complexity as lc
+from linguaf import syntactical_complexity as sc
 
 
-lc.mean_dependency_distance(documents)
+sc.mean_dependency_distance(documents)
 # Output: 2.307306255835668
 ```
 

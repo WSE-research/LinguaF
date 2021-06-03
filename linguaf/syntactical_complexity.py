@@ -30,7 +30,7 @@ def mean_dependency_distance(documents: list, lang: str = 'en') -> float:
             doc.parse_syntax(syntax_parser)
             for t in doc.tokens:
                 dd += abs(int(t.head_id.split('_')[1]) - int(t.id.split('_')[1]))
-            mdd = dd/(len(doc.tokens) - 1)
+                
         elif lang == 'en':
             try:
                 nlp = spacy.load("en_core_web_sm")
