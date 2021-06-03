@@ -58,7 +58,7 @@ def log_type_token_ratio(documents: list, lang: str = 'en', remove_stopwords: bo
 
     words = get_words(documents=documents, lang=lang, remove_stopwords=remove_stopwords)
     num_unq = len(collections.Counter(words).keys())
-    return math.log(num_unq)/math.log(len(words))
+    return math.log(num_unq)/math.log(len(words)) if len(words) != 1 else 0
 
 
 def summer_index(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
