@@ -1,5 +1,5 @@
 from linguaf.descriptive_statistics import get_words, syllable_count, avg_word_length, \
-    number_of_n_syllable_words, sentence_count, words_per_sentence
+    number_of_n_syllable_words, sentence_count, avg_words_per_sentence
 from linguaf import __check_bool_param, __check_documents_param, __check_lang_param
 
 
@@ -19,7 +19,7 @@ def flesch_reading_ease(documents: list, lang: str = 'en', remove_stopwords: boo
     __check_bool_param(remove_stopwords)
 
     words = get_words(documents, lang, remove_stopwords)
-    asl = words_per_sentence(documents, lang, remove_stopwords)
+    asl = avg_words_per_sentence(documents, lang, remove_stopwords)
     syl_total = syllable_count(words, lang)
 
     if lang == 'en':
@@ -44,7 +44,7 @@ def flesch_kincaid_grade(documents: list, lang: str = 'en', remove_stopwords: bo
     __check_bool_param(remove_stopwords)
 
     words = get_words(documents, lang, remove_stopwords)
-    asl = words_per_sentence(documents)
+    asl = avg_words_per_sentence(documents)
     syl_total = syllable_count(words, lang)
 
     if lang == 'en':
@@ -69,7 +69,7 @@ def automated_readability_index(documents: list, lang: str = 'en', remove_stopwo
     __check_lang_param(lang)
     __check_bool_param(remove_stopwords)
 
-    asl = words_per_sentence(documents, lang, remove_stopwords)
+    asl = avg_words_per_sentence(documents, lang, remove_stopwords)
     awl = avg_word_length(documents, lang, remove_stopwords)
 
     return 0.5*asl + 4.71*awl - 21.43
@@ -90,7 +90,7 @@ def automated_readability_index_simple(documents: list, lang: str = 'en', remove
     __check_lang_param(lang)
     __check_bool_param(remove_stopwords)
 
-    asl = words_per_sentence(documents, lang, remove_stopwords)
+    asl = avg_words_per_sentence(documents, lang, remove_stopwords)
     awl = avg_word_length(documents, lang, remove_stopwords)
 
     return asl + 9.0*awl

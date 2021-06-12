@@ -354,7 +354,7 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
     return lex_items
 
 
-def words_per_sentence(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> list:
+def avg_words_per_sentence(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> list:
     """Calculate average number of words in a sentence based on a list of documents.
 
     Keyword arguments:
