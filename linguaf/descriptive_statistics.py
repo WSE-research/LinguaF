@@ -133,16 +133,18 @@ def syllable_count(words: list, lang: str = 'en') -> int:
     return syl_count
 
 
-def number_of_n_syllable_words(words: list, lang: str = 'en', n: tuple = (1, 2)) -> int:
+def number_of_n_syllable_words(documents: list, lang: str = 'en', n: tuple = (1, 2), remove_stopwords=False) -> int:
     """Count number of words with x <= n < y syllable words in a list of words
 
     Keyword arguments:
-    words -- the list of words
+    documents -- the list of documents
     lang -- language of the words
     n -- tuple: (x, y)
     """
-    __check_words_param(words)
+    __check_documents_param(documents)
     __check_lang_param(lang)
+
+    words = get_words(documents, lang, remove_stopwords)
     if n[0] < 1 or n[1] <= n[0]:
         raise ValueError(f"The given n parameter isn't correct: {n}. n=tuple(x,y), x>0, y>x.")
 
@@ -150,7 +152,7 @@ def number_of_n_syllable_words(words: list, lang: str = 'en', n: tuple = (1, 2))
     dic = pyphen.Pyphen(lang=lang)  # TODO: match language
     for word in words:
         syl_cnt = len(dic.inserted(word).split('-'))
-        for i in n:
+        for i in range(n[0], n[1]):
             if syl_cnt == i:
                 count += 1
     return count

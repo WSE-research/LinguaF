@@ -110,7 +110,7 @@ def coleman_readability(documents: list, lang: str = 'en', remove_stopwords: boo
     __check_bool_param(remove_stopwords)
 
     words = get_words(documents, lang, remove_stopwords)
-    nws_one = number_of_n_syllable_words(words, lang, (1, 2))
+    nws_one = number_of_n_syllable_words(documents, lang, (1, 2), remove_stopwords)
 
     return 1.29*(100*nws_one/len(words)) - 38.45
 
@@ -129,7 +129,6 @@ def easy_listening(documents: list, lang: str = 'en', remove_stopwords: bool = F
     __check_bool_param(remove_stopwords)
 
     nst = sentence_count(documents)
-    words = get_words(documents, lang, remove_stopwords)
-    nws_more_two = number_of_n_syllable_words(words, lang, (2, 15))
+    nws_more_two = number_of_n_syllable_words(documents, lang, (2, 15), remove_stopwords)
 
     return nws_more_two/nst

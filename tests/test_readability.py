@@ -172,25 +172,25 @@ def test_coleman_readability():
              "То есть, в результате применения к векторному полю операции дифференцирования получается скалярное поле.",
              "Она определяет (для каждой точки), «насколько расходится входящее и исходящее из малой окрестности данной точки поле»",
              "Точнее, насколько расходятся входящий и исходящий потоки."
-         ], 20),
+         ], -9),
         ([
              "«Лунтик и его друзья» — российский мультсериал, ориентированный на семейную и детскую аудиторию.",
              "Транслируется на телевидении с 1 сентября 2006 года по настоящее время.",
              "Ключевой темой стали приключения маленького пушистого существа Лунтика — космического пришельца, который родился на Луне."
-         ], 24)
+         ], -3)
     ]
 
     read_data_en = [
         ([
              "In vector calculus, divergence is a vector operator that operates on a vector field, producing a scalar field giving the quantity of the vector field's source at each point.",
              "More technically, the divergence represents the volume density of the outward flux of a vector field from an infinitesimal volume around a given point."
-         ], 69),
+         ], 42),
         ([
              "Luntik and his friends (Russian: Лунтик и его друзья) or simply Luntik (Russian: Лунтик), in its English version better known as Moonzy, is a Russian animated series for children.",
              "The title character is a purple furry alien named Luntik/Moonzy.",
              "In the first episode Moonzy is shown hatching from an egg on the moon and then falling to Earth.",
              "All of the following series take place at a forest glade near a pond where Moonzy finds a new home."
-         ], 80)
+         ], 65)
     ]
 
     for d in read_data_ru:
@@ -213,25 +213,25 @@ def test_easy_listening():
              "То есть, в результате применения к векторному полю операции дифференцирования получается скалярное поле.",
              "Она определяет (для каждой точки), «насколько расходится входящее и исходящее из малой окрестности данной точки поле»",
              "Точнее, насколько расходятся входящий и исходящий потоки."
-         ], 2),
+         ], 8),
         ([
              "«Лунтик и его друзья» — российский мультсериал, ориентированный на семейную и детскую аудиторию.",
              "Транслируется на телевидении с 1 сентября 2006 года по настоящее время.",
              "Ключевой темой стали приключения маленького пушистого существа Лунтика — космического пришельца, который родился на Луне."
-         ], 2)
+         ], 9)
     ]
 
     read_data_en = [
         ([
              "In vector calculus, divergence is a vector operator that operates on a vector field, producing a scalar field giving the quantity of the vector field's source at each point.",
              "More technically, the divergence represents the volume density of the outward flux of a vector field from an infinitesimal volume around a given point."
-         ], 5),
+         ], 10),
         ([
              "Luntik and his friends (Russian: Лунтик и его друзья) or simply Luntik (Russian: Лунтик), in its English version better known as Moonzy, is a Russian animated series for children.",
              "The title character is a purple furry alien named Luntik/Moonzy.",
              "In the first episode Moonzy is shown hatching from an egg on the moon and then falling to Earth.",
              "All of the following series take place at a forest glade near a pond where Moonzy finds a new home."
-         ], 2)
+         ], 3)
     ]
 
     for d in read_data_ru:
