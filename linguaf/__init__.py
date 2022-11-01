@@ -6,7 +6,7 @@ __version__ = '0.1.0'
 
 def __load_json(filepath):
     data = None
-    with open(filepath) as f:
+    with open(filepath, encoding="utf8") as f:
         data = json.load(f)
     return data
 
