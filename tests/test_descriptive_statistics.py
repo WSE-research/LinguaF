@@ -169,6 +169,7 @@ def test_tokenize_remove_stopwords():
 
 def test_get_words():
     # stopwords removal tested in test_tokenize_remove_stopwords
+    #Russian
     ru_words = [
         (["Привет, меня зовут Александр! Я создатель этой библиотеки."],
          8,
@@ -186,7 +187,7 @@ def test_get_words():
          3,
          ['Как', 'дела', 'Хорошо'])
     ]
-
+    #English
     en_words = [
         (["Hello, I'm Aleksandr! I'm the creator of this library."],
          11,
@@ -204,21 +205,107 @@ def test_get_words():
          4,
          ['How', 'are', 'you', 'Good'])
     ]
+    #German
+    de_words = [
+        (["Hallo, mein Name ist Aleksandr! Ich bin der Autor dieser Bibliothek."],
+         11,
+         ['Hallo', 'mein', 'Name', 'ist', 'Aleksandr', 'Ich', 'bin', 'der', 'Autor', 'dieser', 'Bibliothek']),
+        (["Viel Freude damit!"],
+         3,
+         ['Viel', 'Freude', 'damit']),
+        (["Tschüs"],
+         1,
+         ["Tschüs"]),
+        (["Hallo...ich bin's..."],
+         4,
+         ['Hallo', 'ich', 'bin', "'s"]),
+        (["Wie geht es Ihnen? Gut!"],
+         5,
+         ['Wie', 'geht', 'es', 'Ihnen', 'Gut'])
+    ]
+    #French (mt)
+    fr_words = [
+        (["Bonjour, je m'appelle Aleksandr ! Je suis l'auteur de cette bibliothèque."],
+         10,
+         ['Bonjour', 'je', "m'appelle", 'Aleksandr', 'Je', 'suis', "l'auteur", 'de', 'cette', 'bibliothèque']),
+        (["Amusez-vous bien!"],
+         2,
+         ['Amusez-vous', 'bien']),
+        (["Salut"],
+         1,
+         ["Salut"]),
+        (["Bonjour...c'est moi..."],
+         3,
+         ['Bonjour', "c'est", 'moi']),
+        (["Comment vas-tu ? Bien!"],
+         3,
+         ['Comment', 'vas-tu', 'Bien'])
+    ]
+    #Spanish (mt)
+    es_words = [
+        (["¡Hola, soy Aleksandr! Soy el autor de esta biblioteca."],
+         9,
+         ['¡Hola', 'soy', 'Aleksandr', 'Soy', 'el', 'autor', 'de', 'esta', 'biblioteca']),
+        # fails if word does not include '¡' -> is this intended?
+        (["Disfruta usándolo."],
+         2,
+         ['Disfruta', 'usándolo']),
+        (["adiós"],
+         1,
+         ['adiós']),
+        (["Hola...soy yo..."],
+         3,
+         ['Hola', 'soy', 'yo']),
+        (["¿Cómo estás? Bien!"],
+         3,
+         ['¿Cómo', 'estás', 'Bien'])
+        # fails if word does not include '¿' -> is this intended?
+    ]
+    #Chinese (mt)
+    zh_words = [
+        (["大家好，我是亚历山大。 我是这个库的创建者"],
+         2,
+         ['大家好，我是亚历山大。', '我是这个库的创建者']),
+        # first two words counted as one? 
+        # languge-specific signs? 
+        # => alternative:
+        (["大家好, 我是亚历山大. 我是这个库的创建者"],
+         3,
+         ['大家好', '我是亚历山大', '我是这个库的创建者']),
+        # this works as expected ....
+        (["玩得开心"],
+         1,
+         ['玩得开心']),
+        (["见"],
+         1,
+         ['见']),
+        (["你好, 是我"],
+         2,
+         ['你好', '是我']),
+        (["你好吗? 好!"],
+         2,
+         ['你好吗', '好'])
+    ]
+    #Lithuanian
+    #Belarusian
+    #Ukrainian
+    #Armenian
 
-    for i in range(len(ru_words)):
-        cnt = ru_words[i][1]
-        true_words = ru_words[i][2]
+    check_found_words(ru_words, 'ru')
+    check_found_words(en_words, 'en')
+    check_found_words(de_words, 'de')
+    check_found_words(fr_words, 'fr')
+    check_found_words(es_words, 'es')
+    check_found_words(zh_words, 'zh')
 
-        words = ds.get_words(documents=ru_words[i][0], lang='ru', remove_stopwords=False)
 
-        assert len(words) == cnt
-        assert words == true_words
+# helper function for test_get_words
+def check_found_words(words_list: list, lang: str):
+    for i in range(len(words_list)):
+        cnt = words_list[i][1]
+        true_words = words_list[i][2]
 
-    for i in range(len(en_words)):
-        cnt = en_words[i][1]
-        true_words = en_words[i][2]
-
-        words = ds.get_words(documents=en_words[i][0], lang='en', remove_stopwords=False)
+        words = ds.get_words(documents=words_list[i][0], lang=lang, remove_stopwords=False)
 
         assert len(words) == cnt
         assert words == true_words

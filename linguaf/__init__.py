@@ -1,6 +1,7 @@
 import json
 
-SUPPORTED_LANGS = ['en', 'ru']
+SUPPORTED_LANGS = ['en', 'ru', 'de', 'fr', 'es', 'zh'] # new
+                   # "lt", "be", "uk", "hy" # no stopwords from nltk!
 __version__ = '0.1.0'
 
 
