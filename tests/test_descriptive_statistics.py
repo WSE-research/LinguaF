@@ -91,24 +91,112 @@ def test_tokenize_stopwords():
          6,
          ['How', 'are', 'you', '?', 'Good', '!'])
     ]
+    #German
+    de_tokens = [
+        ("Hallo, mein Name ist Aleksandr! Ich bin der Autor dieser Bibliothek.",
+         14,
+         ['Hallo', ',', 'mein', 'Name', 'ist', 'Aleksandr', '!', 'Ich', 'bin', 'der', 'Autor', 'dieser', 'Bibliothek', '.']),
+        ("Viel Freude damit!",
+         4,
+         ['Viel', 'Freude', 'damit', '!']),
+        ("Tschüs",
+         1,
+         ['Tschüs']),
+        ("Hallo...ich bin's...",
+         6,
+         ['Hallo', '...', 'ich', 'bin', "'s", '...']),
+        ("Wie geht es Ihnen? Gut!",
+         7,
+         ['Wie', 'geht', 'es', 'Ihnen', '?', 'Gut', '!'])
+    ]
+    #French (mt)
+    fr_tokens = [
+        ("Bonjour, je m'appelle Aleksandr ! Je suis l'auteur de cette bibliothèque.",
+         13,
+         ['Bonjour', ',', 'je', "m'appelle", 'Aleksandr', '!', 'Je', 'suis', "l'auteur", 'de', 'cette', 'bibliothèque', '.']),
+        ("Amusez-vous bien!",
+         3,
+         ['Amusez-vous', 'bien', '!']),
+        ("Salut",
+         1,
+         ["Salut"]),
+        ("Bonjour...c'est moi...",
+         5,
+         ['Bonjour', '...', "c'est", 'moi', '...']),
+        ("Comment vas-tu ? Bien!",
+         5,
+         ['Comment', 'vas-tu', '?', 'Bien', '!'])
+    ]
+    #Spanish (mt)
+    es_tokens = [
+        ("¡Hola, soy Aleksandr! Soy el autor de esta biblioteca.",
+         12,
+         ['¡Hola', ',', 'soy', 'Aleksandr', '!', 'Soy', 'el', 'autor', 'de', 'esta', 'biblioteca', '.']),
+        # fails if word does not include '¡' -> is this intended?
+        ("Disfruta usándolo.",
+         3,
+         ['Disfruta', 'usándolo', '.']),
+        ("adiós",
+         1,
+         ['adiós']),
+        ("Hola...soy yo...",
+         5,
+         ['Hola', '...', 'soy', 'yo', '...']),
+        ("¿Cómo estás? Bien!",
+         5,
+         ['¿Cómo', 'estás', '?', 'Bien', '!'])
+        # fails if word does not include '¿' -> is this intended?
+    ]
+    #Chinese (mt)
+    zh_tokens = [
+        ("大家好，我是亚历山大。 我是这个库的创建者",
+         2,
+         ['大家好，我是亚历山大。', '我是这个库的创建者']),
+        # first two words counted as one? 
+        # languge-specific signs? 
+        # => alternative:
+        ("大家好, 我是亚历山大. 我是这个库的创建者",
+         5,
+         ['大家好', ',', '我是亚历山大', '.', '我是这个库的创建者']),
+        # this works as expected ....
+        ("玩得开心",
+         1,
+         ['玩得开心']),
+        ("见",
+         1,
+         ['见']),
+        ("你好, 是我",
+         3,
+         ['你好', ',', '是我']),
+        ("你好吗? 好!",
+         4,
+         ['你好吗', '?', '好', '!'])
+    ]
+    #Lithuanian
+    #Belarusian
+    #Ukrainian
+    #Armenian
 
-    for i in range(len(ru_tokens)):
-        cnt = ru_tokens[i][1]
-        true_tokens = ru_tokens[i][2]
+    check_tokenization(en_tokens, 'en')
+    check_tokenization(ru_tokens, 'ru')
+    check_tokenization(de_tokens, 'de')
+    check_tokenization(fr_tokens, 'fr')
+    check_tokenization(es_tokens, 'es')
+    check_tokenization(zh_tokens, 'zh')
 
-        tokens = ds.tokenize(text=ru_tokens[i][0], lang='ru', remove_stopwords=False)
+
+
+# helper function for test_tokenize_stopwords
+def check_tokenization(token_list: list, lang: str):
+    for i in range(len(token_list)):
+        cnt = token_list[i][1]
+        true_tokens = token_list[i][2]
+
+        tokens = ds.tokenize(text=token_list[i][0], lang=lang, remove_stopwords=False)
 
         assert len(tokens) == cnt
         assert tokens == true_tokens
 
-    for i in range(len(en_tokens)):
-        cnt = en_tokens[i][1]
-        true_tokens = en_tokens[i][2]
-
-        tokens = ds.tokenize(text=en_tokens[i][0], lang='en', remove_stopwords=False)
-
-        assert len(tokens) == cnt
-        assert tokens == true_tokens
 
 
 def test_tokenize_remove_stopwords():
