@@ -1,4 +1,5 @@
 from linguaf import descriptive_statistics as ds
+import pytest
 
 
 def test_sentence_count():
@@ -482,15 +483,51 @@ def test_avg_syllable_per_word():
         (["Hello...it's me...", "How are you? Good!"], 1)
     ]
 
-    for d in avg_syllables_per_word_ru:
-        cnt = d[1]
-        res = int(ds.avg_syllable_per_word(d[0], 'ru'))
+    avg_syllables_per_word_de = [
+        (["Hallo, mein Name ist Aleksandr! Ich bin der Autor dieser Bibliothek.", "Viel Freude damit!"], 1),
+        (["Auf Wiedersehen"], 2),
+        (["Hallo...ich bin's...", "Wie geht es Ihnen? Gut!"], 1),
+    ]
+    #French (mt)
+    avg_syllables_per_word_fr = [
+        (["Bonjour, je m'appelle Aleksandr ! Je suis l'auteur de cette bibliothèque.", "Amusez-vous bien!"], 1),
+        (["Salut"], 2),
+        (["Bonjour...c'est moi...", "Comment vas-tu ? Bien!"], 1)
+    ]
+    #Spanish (mt)
+    avg_syllables_per_word_es = [
+        (["¡Hola, soy Aleksandr! Soy el autor de esta biblioteca.", "Disfruta usándolo."], 2),
+        (["adiós"], 1), # TODO: why is this only 1 syllable? 
+        (["Hola...soy yo...", "¿Cómo estás? Bien!"], 1)
+    ]
+    #Chinese (mt)
+    avg_syllables_per_word_zh = [
+#        (["大家好，我是亚历山大。 我是这个库的创建者"],
+#         2,
+#         ['大家好，我是亚历山大。', '我是这个库的创建者']),
+#        # first two words counted as one? 
+#        # languge-specific signs? 
+#        # => alternative:
+        (["大家好, 我是亚历山大. 我是这个库的创建者.", "玩得开心"], 0),
+        (["见"], 1),
+        (["你好, 是我","你好吗? 好!"], 0)
+    ]
 
-        assert cnt == res
+    check_avg_syllable_per_word(avg_syllables_per_word_ru, 'ru')
+    check_avg_syllable_per_word(avg_syllables_per_word_en, 'en')
+    check_avg_syllable_per_word(avg_syllables_per_word_de, 'de')
+    check_avg_syllable_per_word(avg_syllables_per_word_fr, 'fr')
+    check_avg_syllable_per_word(avg_syllables_per_word_es, 'es')
+    # chinese is not supported; it should raise a ValueError
+    with pytest.raises(ValueError):
+        check_avg_syllable_per_word(avg_syllables_per_word_zh, 'zh')
 
-    for d in avg_syllables_per_word_en:
+
+# helper function for test_avg_syllable_per_word
+def check_avg_syllable_per_word(syllable_list: list, lang: str):
+    for d in syllable_list:
         cnt = d[1]
-        res = int(ds.avg_syllable_per_word(d[0], 'en'))
+        res = int(ds.avg_syllable_per_word(d[0], lang))
 
         assert cnt == res
 

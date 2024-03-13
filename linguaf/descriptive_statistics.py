@@ -3,6 +3,7 @@ import re
 import pathlib
 import string
 import pyphen
+import zhon
 import pymorphy2
 from nltk import word_tokenize, pos_tag
 import nltk
@@ -125,6 +126,10 @@ def syllable_count(words: list, lang: str = 'en') -> int:
     words -- the list of words
     lang -- language of the words
     """
+    lang_blacklist = ['zh']
+    if lang in lang_blacklist:
+        raise ValueError(f"Syllable counting is currently not supported for the language " + lang + ".")
+
     __check_words_param(words)
     syl_count = 0
     dic = pyphen.Pyphen(lang=lang)  # TODO: match language
