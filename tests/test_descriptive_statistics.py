@@ -1,5 +1,8 @@
 from linguaf import descriptive_statistics as ds
+import pytest
+import logging
 
+LOGGER = logging.getLogger(__name__)
 
 def test_sentence_count():
     ru_sentence_cnt = [
@@ -91,24 +94,112 @@ def test_tokenize_stopwords():
          6,
          ['How', 'are', 'you', '?', 'Good', '!'])
     ]
+    #German
+    de_tokens = [
+        ("Hallo, mein Name ist Aleksandr! Ich bin der Autor dieser Bibliothek.",
+         14,
+         ['Hallo', ',', 'mein', 'Name', 'ist', 'Aleksandr', '!', 'Ich', 'bin', 'der', 'Autor', 'dieser', 'Bibliothek', '.']),
+        ("Viel Freude damit!",
+         4,
+         ['Viel', 'Freude', 'damit', '!']),
+        ("Tschüs",
+         1,
+         ['Tschüs']),
+        ("Hallo...ich bin's...",
+         6,
+         ['Hallo', '...', 'ich', 'bin', "'s", '...']),
+        ("Wie geht es Ihnen? Gut!",
+         7,
+         ['Wie', 'geht', 'es', 'Ihnen', '?', 'Gut', '!'])
+    ]
+    #French (mt)
+    fr_tokens = [
+        ("Bonjour, je m'appelle Aleksandr ! Je suis l'auteur de cette bibliothèque.",
+         13,
+         ['Bonjour', ',', 'je', "m'appelle", 'Aleksandr', '!', 'Je', 'suis', "l'auteur", 'de', 'cette', 'bibliothèque', '.']),
+        ("Amusez-vous bien!",
+         3,
+         ['Amusez-vous', 'bien', '!']),
+        ("Salut",
+         1,
+         ["Salut"]),
+        ("Bonjour...c'est moi...",
+         5,
+         ['Bonjour', '...', "c'est", 'moi', '...']),
+        ("Comment vas-tu ? Bien!",
+         5,
+         ['Comment', 'vas-tu', '?', 'Bien', '!'])
+    ]
+    #Spanish (mt)
+    es_tokens = [
+        ("¡Hola, soy Aleksandr! Soy el autor de esta biblioteca.",
+         12,
+         ['¡Hola', ',', 'soy', 'Aleksandr', '!', 'Soy', 'el', 'autor', 'de', 'esta', 'biblioteca', '.']),
+        # fails if word does not include '¡' -> is this intended?
+        ("Disfruta usándolo.",
+         3,
+         ['Disfruta', 'usándolo', '.']),
+        ("adiós",
+         1,
+         ['adiós']),
+        ("Hola...soy yo...",
+         5,
+         ['Hola', '...', 'soy', 'yo', '...']),
+        ("¿Cómo estás? Bien!",
+         5,
+         ['¿Cómo', 'estás', '?', 'Bien', '!'])
+        # fails if word does not include '¿' -> is this intended?
+    ]
+    #Chinese (mt)
+    zh_tokens = [
+        ("大家好，我是亚历山大。 我是这个库的创建者",
+         2,
+         ['大家好，我是亚历山大。', '我是这个库的创建者']),
+        # first two words counted as one? 
+        # languge-specific signs? 
+        # => alternative:
+        ("大家好, 我是亚历山大. 我是这个库的创建者",
+         5,
+         ['大家好', ',', '我是亚历山大', '.', '我是这个库的创建者']),
+        # this works as expected ....
+        ("玩得开心",
+         1,
+         ['玩得开心']),
+        ("见",
+         1,
+         ['见']),
+        ("你好, 是我",
+         3,
+         ['你好', ',', '是我']),
+        ("你好吗? 好!",
+         4,
+         ['你好吗', '?', '好', '!'])
+    ]
+    #Lithuanian
+    #Belarusian
+    #Ukrainian
+    #Armenian
 
-    for i in range(len(ru_tokens)):
-        cnt = ru_tokens[i][1]
-        true_tokens = ru_tokens[i][2]
+    check_tokenization(en_tokens, 'en')
+    check_tokenization(ru_tokens, 'ru')
+    check_tokenization(de_tokens, 'de')
+    check_tokenization(fr_tokens, 'fr')
+    check_tokenization(es_tokens, 'es')
+    check_tokenization(zh_tokens, 'zh')
 
-        tokens = ds.tokenize(text=ru_tokens[i][0], lang='ru', remove_stopwords=False)
+
+
+# helper function for test_tokenize_stopwords
+def check_tokenization(token_list: list, lang: str):
+    for i in range(len(token_list)):
+        cnt = token_list[i][1]
+        true_tokens = token_list[i][2]
+
+        tokens = ds.tokenize(text=token_list[i][0], lang=lang, remove_stopwords=False)
 
         assert len(tokens) == cnt
         assert tokens == true_tokens
 
-    for i in range(len(en_tokens)):
-        cnt = en_tokens[i][1]
-        true_tokens = en_tokens[i][2]
-
-        tokens = ds.tokenize(text=en_tokens[i][0], lang='en', remove_stopwords=False)
-
-        assert len(tokens) == cnt
-        assert tokens == true_tokens
 
 
 def test_tokenize_remove_stopwords():
@@ -169,6 +260,7 @@ def test_tokenize_remove_stopwords():
 
 def test_get_words():
     # stopwords removal tested in test_tokenize_remove_stopwords
+    #Russian
     ru_words = [
         (["Привет, меня зовут Александр! Я создатель этой библиотеки."],
          8,
@@ -186,7 +278,7 @@ def test_get_words():
          3,
          ['Как', 'дела', 'Хорошо'])
     ]
-
+    #English
     en_words = [
         (["Hello, I'm Aleksandr! I'm the creator of this library."],
          11,
@@ -204,21 +296,107 @@ def test_get_words():
          4,
          ['How', 'are', 'you', 'Good'])
     ]
+    #German
+    de_words = [
+        (["Hallo, mein Name ist Aleksandr! Ich bin der Autor dieser Bibliothek."],
+         11,
+         ['Hallo', 'mein', 'Name', 'ist', 'Aleksandr', 'Ich', 'bin', 'der', 'Autor', 'dieser', 'Bibliothek']),
+        (["Viel Freude damit!"],
+         3,
+         ['Viel', 'Freude', 'damit']),
+        (["Tschüs"],
+         1,
+         ["Tschüs"]),
+        (["Hallo...ich bin's..."],
+         4,
+         ['Hallo', 'ich', 'bin', "'s"]),
+        (["Wie geht es Ihnen? Gut!"],
+         5,
+         ['Wie', 'geht', 'es', 'Ihnen', 'Gut'])
+    ]
+    #French (mt)
+    fr_words = [
+        (["Bonjour, je m'appelle Aleksandr ! Je suis l'auteur de cette bibliothèque."],
+         10,
+         ['Bonjour', 'je', "m'appelle", 'Aleksandr', 'Je', 'suis', "l'auteur", 'de', 'cette', 'bibliothèque']),
+        (["Amusez-vous bien!"],
+         2,
+         ['Amusez-vous', 'bien']),
+        (["Salut"],
+         1,
+         ["Salut"]),
+        (["Bonjour...c'est moi..."],
+         3,
+         ['Bonjour', "c'est", 'moi']),
+        (["Comment vas-tu ? Bien!"],
+         3,
+         ['Comment', 'vas-tu', 'Bien'])
+    ]
+    #Spanish (mt)
+    es_words = [
+        (["¡Hola, soy Aleksandr! Soy el autor de esta biblioteca."],
+         9,
+         ['¡Hola', 'soy', 'Aleksandr', 'Soy', 'el', 'autor', 'de', 'esta', 'biblioteca']),
+        # fails if word does not include '¡' -> is this intended?
+        (["Disfruta usándolo."],
+         2,
+         ['Disfruta', 'usándolo']),
+        (["adiós"],
+         1,
+         ['adiós']),
+        (["Hola...soy yo..."],
+         3,
+         ['Hola', 'soy', 'yo']),
+        (["¿Cómo estás? Bien!"],
+         3,
+         ['¿Cómo', 'estás', 'Bien'])
+        # fails if word does not include '¿' -> is this intended?
+    ]
+    #Chinese (mt)
+    zh_words = [
+        (["大家好，我是亚历山大。 我是这个库的创建者"],
+         2,
+         ['大家好，我是亚历山大。', '我是这个库的创建者']),
+        # first two words counted as one? 
+        # languge-specific signs? 
+        # => alternative:
+        (["大家好, 我是亚历山大. 我是这个库的创建者"],
+         3,
+         ['大家好', '我是亚历山大', '我是这个库的创建者']),
+        # this works as expected ....
+        (["玩得开心"],
+         1,
+         ['玩得开心']),
+        (["见"],
+         1,
+         ['见']),
+        (["你好, 是我"],
+         2,
+         ['你好', '是我']),
+        (["你好吗? 好!"],
+         2,
+         ['你好吗', '好'])
+    ]
+    #Lithuanian
+    #Belarusian
+    #Ukrainian
+    #Armenian
 
-    for i in range(len(ru_words)):
-        cnt = ru_words[i][1]
-        true_words = ru_words[i][2]
+    check_found_words(ru_words, 'ru')
+    check_found_words(en_words, 'en')
+    check_found_words(de_words, 'de')
+    check_found_words(fr_words, 'fr')
+    check_found_words(es_words, 'es')
+    check_found_words(zh_words, 'zh')
 
-        words = ds.get_words(documents=ru_words[i][0], lang='ru', remove_stopwords=False)
 
-        assert len(words) == cnt
-        assert words == true_words
+# helper function for test_get_words
+def check_found_words(words_list: list, lang: str):
+    for i in range(len(words_list)):
+        cnt = words_list[i][1]
+        true_words = words_list[i][2]
 
-    for i in range(len(en_words)):
-        cnt = en_words[i][1]
-        true_words = en_words[i][2]
-
-        words = ds.get_words(documents=en_words[i][0], lang='en', remove_stopwords=False)
+        words = ds.get_words(documents=words_list[i][0], lang=lang, remove_stopwords=False)
 
         assert len(words) == cnt
         assert words == true_words
@@ -307,15 +485,51 @@ def test_avg_syllable_per_word():
         (["Hello...it's me...", "How are you? Good!"], 1)
     ]
 
-    for d in avg_syllables_per_word_ru:
-        cnt = d[1]
-        res = int(ds.avg_syllable_per_word(d[0], 'ru'))
+    avg_syllables_per_word_de = [
+        (["Hallo, mein Name ist Aleksandr! Ich bin der Autor dieser Bibliothek.", "Viel Freude damit!"], 1),
+        (["Auf Wiedersehen"], 2),
+        (["Hallo...ich bin's...", "Wie geht es Ihnen? Gut!"], 1),
+    ]
+    #French (mt)
+    avg_syllables_per_word_fr = [
+        (["Bonjour, je m'appelle Aleksandr ! Je suis l'auteur de cette bibliothèque.", "Amusez-vous bien!"], 1),
+        (["Salut"], 2),
+        (["Bonjour...c'est moi...", "Comment vas-tu ? Bien!"], 1)
+    ]
+    #Spanish (mt)
+    avg_syllables_per_word_es = [
+        (["¡Hola, soy Aleksandr! Soy el autor de esta biblioteca.", "Disfruta usándolo."], 2),
+        (["adiós"], 1), # TODO: why is this only 1 syllable? 
+        (["Hola...soy yo...", "¿Cómo estás? Bien!"], 1)
+    ]
+    #Chinese (mt)
+    avg_syllables_per_word_zh = [
+#        (["大家好，我是亚历山大。 我是这个库的创建者"],
+#         2,
+#         ['大家好，我是亚历山大。', '我是这个库的创建者']),
+#        # first two words counted as one? 
+#        # languge-specific signs? 
+#        # => alternative:
+        (["大家好, 我是亚历山大. 我是这个库的创建者.", "玩得开心"], 0),
+        (["见"], 1),
+        (["你好, 是我","你好吗? 好!"], 0)
+    ]
 
-        assert cnt == res
+    check_avg_syllable_per_word(avg_syllables_per_word_ru, 'ru')
+    check_avg_syllable_per_word(avg_syllables_per_word_en, 'en')
+    check_avg_syllable_per_word(avg_syllables_per_word_de, 'de')
+    check_avg_syllable_per_word(avg_syllables_per_word_fr, 'fr')
+    check_avg_syllable_per_word(avg_syllables_per_word_es, 'es')
+    # chinese is not supported; it should raise a ValueError
+    with pytest.raises(ValueError):
+        check_avg_syllable_per_word(avg_syllables_per_word_zh, 'zh')
 
-    for d in avg_syllables_per_word_en:
+
+# helper function for test_avg_syllable_per_word
+def check_avg_syllable_per_word(syllable_list: list, lang: str):
+    for d in syllable_list:
         cnt = d[1]
-        res = int(ds.avg_syllable_per_word(d[0], 'en'))
+        res = int(ds.avg_syllable_per_word(d[0], lang))
 
         assert cnt == res
 
@@ -338,14 +552,61 @@ def test_get_lexical_items():
          [('Hello', 'NNP'), ("'s", 'VBZ'), ('are', 'VBP'), ('Good', 'JJ')])
     ]
 
-    for d in lexical_items_ru_data:
-        lex_items = d[1]
-        result = ds.get_lexical_items(d[0], False, 'ru')
+    lexical_items_de_data = [
+        (["Hallo, mein Name ist Aleksandr! Ich bin der Autor dieser Bibliothek.", "Viel Freude damit!"],
+          [('Hallo', 'PROPN'), ('mein', 'DET'), ('Name', 'NOUN'), ('ist', 'AUX'), ('Aleksandr', 'PROPN'),
+           ('Ich', 'PRON'), ('bin', 'AUX'), ('der', 'DET'), ('Autor', 'NOUN'), ('dieser', 'DET'), ('Bibliothek', 'NOUN'),
+           ('Viel', 'DET'), ('Freude', 'NOUN'), ('damit', 'ADV')]),
+#          [('Hallo', 'PROPN'), (',', 'PUNCT'), ('mein', 'DET'), ('Name', 'NOUN'), ('ist', 'AUX'), ('Aleksandr', 'PROPN'),
+#           ('!', 'PUNCT'), ('Ich', 'PRON'), ('bin', 'AUX'), ('der', 'DET'), ('Autor', 'NOUN'), ('dieser', 'DET'), ('Bibliothek', 'NOUN'),
+#           ('.', 'PUNCT'), ('Viel', 'DET'), ('Freude', 'NOUN'), ('damit', 'ADV'), ('!', 'PUNCT')]),
+        (["Auf Wiedersehen"],
+         [('Auf', 'ADP'), ('Wiedersehen', 'NOUN')]),
+        (["Hallo...ich bin's...", "Wie geht es Ihnen? Gut!"],
+         [('Hallo', 'PROPN'), ('ich', 'PRON'), ("bin's", 'VERB'),
+          ('Wie', 'ADV'), ('geht', 'VERB'), ('es', 'PRON'), ('Ihnen', 'PRON'), ('Gut', 'ADV')])
+    ]
 
+    lexical_items_fr_data = [
+        (["Bonjour, je m'appelle Aleksandr ! Je suis l'auteur de cette bibliothèque.", "Amusez-vous bien!"],
+         [('Bonjour', 'PROPN'), ('je', 'PRON'), ("m'", 'PRON'), ('appelle', 'VERB'), ('Aleksandr', 'PROPN'),
+          ('Je', 'PRON'), ('suis', 'AUX'), ("l'", 'DET'), ('auteur', 'NOUN'), ('de', 'ADP'), ('cette', 'DET'),
+          ('bibliothèque', 'NOUN'), ('Amusez', 'ADV'), ('-vous', 'NOUN'), ('bien', 'ADV')]),
+        (["Salut"],
+         [('Salut', 'PROPN')]),
+        (["Bonjour...c'est moi...", "Comment vas-tu ? Bien!"],
+         [('Bonjour', 'PROPN'), ("c'", 'PRON'), ('est', 'AUX'), ('moi', 'VERB'), ('Comment', 'ADV'),
+          ('vas', 'PROPN'), ('-', 'NOUN'), ('tu', 'NOUN'), ('Bien', 'ADV')])
+    ]
+
+    lexical_items_es_data = [
+        (["¡Hola, soy Aleksandr! Soy el autor de esta biblioteca.", "Disfruta usándolo."],
+         [('Hola', 'PROPN'), ('soy', 'AUX'), ('Aleksandr', 'PROPN'), ('Soy', 'AUX'), ('el', 'DET'),
+          ('autor', 'NOUN'), ('de', 'ADP'), ('esta', 'DET'), ('biblioteca', 'NOUN'), ('Disfruta', 'PROPN'), ('usándolo', 'ADJ')]),
+        (["adiós"],
+         [('adiós', 'INTJ')]),
+        (["Hola...soy yo...", "¿Cómo estás? Bien!"],
+         [('Hola', 'PROPN'), ('soy', 'AUX'), ('yo', 'PRON'), ('Cómo', 'PRON'), ('estás', 'VERB'), ('Bien', 'ADV')])
+    ]
+
+    lexical_items_zh_data = [
+        (["大家好, 我是亚历山大. 我是这个库的创建者.", "玩得开心"], []),
+        (["见"], []),
+        (["你好, 是我","你好吗? 好!"], [])
+    ]
+
+    check_lexical_items(lexical_items_ru_data, 'ru')
+    check_lexical_items(lexical_items_en_data, 'en')
+    check_lexical_items(lexical_items_de_data, 'de')
+    check_lexical_items(lexical_items_fr_data, 'fr')
+    check_lexical_items(lexical_items_es_data, 'es')
+    with pytest.raises(ValueError):
+        check_lexical_items(lexical_items_zh_data, 'zh')
+
+# helper function for test_get_lexical_items
+def check_lexical_items(lexical_items, lang):
+    for d in lexical_items:
+        lex_items = d[1]
+        result = ds.get_lexical_items(d[0], False, lang)
         assert result == lex_items
 
-    for d in lexical_items_en_data:
-        lex_items = d[1]
-        result = ds.get_lexical_items(d[0], False, 'en')
-
-        assert result == lex_items
