@@ -1,6 +1,8 @@
 from linguaf import descriptive_statistics as ds
 import pytest
+import logging
 
+LOGGER = logging.getLogger(__name__)
 
 def test_sentence_count():
     ru_sentence_cnt = [
@@ -550,14 +552,61 @@ def test_get_lexical_items():
          [('Hello', 'NNP'), ("'s", 'VBZ'), ('are', 'VBP'), ('Good', 'JJ')])
     ]
 
-    for d in lexical_items_ru_data:
-        lex_items = d[1]
-        result = ds.get_lexical_items(d[0], False, 'ru')
+    lexical_items_de_data = [
+        (["Hallo, mein Name ist Aleksandr! Ich bin der Autor dieser Bibliothek.", "Viel Freude damit!"],
+          [('Hallo', 'PROPN'), ('mein', 'DET'), ('Name', 'NOUN'), ('ist', 'AUX'), ('Aleksandr', 'PROPN'),
+           ('Ich', 'PRON'), ('bin', 'AUX'), ('der', 'DET'), ('Autor', 'NOUN'), ('dieser', 'DET'), ('Bibliothek', 'NOUN'),
+           ('Viel', 'DET'), ('Freude', 'NOUN'), ('damit', 'ADV')]),
+#          [('Hallo', 'PROPN'), (',', 'PUNCT'), ('mein', 'DET'), ('Name', 'NOUN'), ('ist', 'AUX'), ('Aleksandr', 'PROPN'),
+#           ('!', 'PUNCT'), ('Ich', 'PRON'), ('bin', 'AUX'), ('der', 'DET'), ('Autor', 'NOUN'), ('dieser', 'DET'), ('Bibliothek', 'NOUN'),
+#           ('.', 'PUNCT'), ('Viel', 'DET'), ('Freude', 'NOUN'), ('damit', 'ADV'), ('!', 'PUNCT')]),
+        (["Auf Wiedersehen"],
+         [('Auf', 'ADP'), ('Wiedersehen', 'NOUN')]),
+        (["Hallo...ich bin's...", "Wie geht es Ihnen? Gut!"],
+         [('Hallo', 'PROPN'), ('ich', 'PRON'), ("bin's", 'VERB'),
+          ('Wie', 'ADV'), ('geht', 'VERB'), ('es', 'PRON'), ('Ihnen', 'PRON'), ('Gut', 'ADV')])
+    ]
 
+    lexical_items_fr_data = [
+        (["Bonjour, je m'appelle Aleksandr ! Je suis l'auteur de cette bibliothèque.", "Amusez-vous bien!"],
+         [('Bonjour', 'PROPN'), ('je', 'PRON'), ("m'", 'PRON'), ('appelle', 'VERB'), ('Aleksandr', 'PROPN'),
+          ('Je', 'PRON'), ('suis', 'AUX'), ("l'", 'DET'), ('auteur', 'NOUN'), ('de', 'ADP'), ('cette', 'DET'),
+          ('bibliothèque', 'NOUN'), ('Amusez', 'ADV'), ('-vous', 'NOUN'), ('bien', 'ADV')]),
+        (["Salut"],
+         [('Salut', 'PROPN')]),
+        (["Bonjour...c'est moi...", "Comment vas-tu ? Bien!"],
+         [('Bonjour', 'PROPN'), ("c'", 'PRON'), ('est', 'AUX'), ('moi', 'VERB'), ('Comment', 'ADV'),
+          ('vas', 'PROPN'), ('-', 'NOUN'), ('tu', 'NOUN'), ('Bien', 'ADV')])
+    ]
+
+    lexical_items_es_data = [
+        (["¡Hola, soy Aleksandr! Soy el autor de esta biblioteca.", "Disfruta usándolo."],
+         [('Hola', 'PROPN'), ('soy', 'AUX'), ('Aleksandr', 'PROPN'), ('Soy', 'AUX'), ('el', 'DET'),
+          ('autor', 'NOUN'), ('de', 'ADP'), ('esta', 'DET'), ('biblioteca', 'NOUN'), ('Disfruta', 'PROPN'), ('usándolo', 'ADJ')]),
+        (["adiós"],
+         [('adiós', 'INTJ')]),
+        (["Hola...soy yo...", "¿Cómo estás? Bien!"],
+         [('Hola', 'PROPN'), ('soy', 'AUX'), ('yo', 'PRON'), ('Cómo', 'PRON'), ('estás', 'VERB'), ('Bien', 'ADV')])
+    ]
+
+    lexical_items_zh_data = [
+        (["大家好, 我是亚历山大. 我是这个库的创建者.", "玩得开心"], []),
+        (["见"], []),
+        (["你好, 是我","你好吗? 好!"], [])
+    ]
+
+    check_lexical_items(lexical_items_ru_data, 'ru')
+    check_lexical_items(lexical_items_en_data, 'en')
+    check_lexical_items(lexical_items_de_data, 'de')
+    check_lexical_items(lexical_items_fr_data, 'fr')
+    check_lexical_items(lexical_items_es_data, 'es')
+    with pytest.raises(ValueError):
+        check_lexical_items(lexical_items_zh_data, 'zh')
+
+# helper function for test_get_lexical_items
+def check_lexical_items(lexical_items, lang):
+    for d in lexical_items:
+        lex_items = d[1]
+        result = ds.get_lexical_items(d[0], False, lang)
         assert result == lex_items
 
-    for d in lexical_items_en_data:
-        lex_items = d[1]
-        result = ds.get_lexical_items(d[0], False, 'en')
-
-        assert result == lex_items

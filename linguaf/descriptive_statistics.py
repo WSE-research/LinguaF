@@ -1,9 +1,12 @@
+import logging
 import os
 import re
 import pathlib
 import string
 import pyphen
 import zhon
+import spacy
+from spacy.lang.de.examples import sentences
 import pymorphy2
 from nltk import word_tokenize, pos_tag
 import nltk
@@ -11,6 +14,8 @@ import collections
 from linguaf import SUPPORTED_LANGS, __load_json, __check_bool_param, __check_documents_param, __check_lang_param, \
     __check_text_param, __check_words_param
 
+
+LOGGER = logging.getLogger(__name__)
 
 try:
     nltk.data.find('tokenizers/punkt')
@@ -129,6 +134,8 @@ def syllable_count(words: list, lang: str = 'en') -> int:
     lang_blacklist = ['zh']
     if lang in lang_blacklist:
         raise ValueError(f"Syllable counting is currently not supported for the language " + lang + ".")
+        # TODO: chinese does have syllables! so this should be supported eventually
+        # however, chinese does not support hyphenation, so the implementation below does not work for it! 
 
     __check_words_param(words)
     syl_count = 0
@@ -148,6 +155,13 @@ def number_of_n_syllable_words(documents: list, lang: str = 'en', n: tuple = (1,
     """
     __check_documents_param(documents)
     __check_lang_param(lang)
+
+    # TODO: refactor duplicate code!
+    lang_blacklist = ['zh']
+    if lang in lang_blacklist:
+        raise ValueError(f"Syllable counting is currently not supported for the language " + lang + ".")
+        # TODO: chinese does have syllables! so this should be supported eventually
+        # however, chinese does not support hyphenation, so the implementation below does not work for it! 
 
     words = get_words(documents, lang, remove_stopwords)
     if n[0] < 1 or n[1] <= n[0]:
@@ -343,7 +357,12 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
     morphy_tags = [
         'NOUN', 'ADJF', 'ADJS', 'VERB', 'INFN', 'ADVB'
     ]
+    spacy_tags = [
+        # TODO: do we want punct tags? 
+        'NOUN', 'AUX', 'PROPN', 'DET', 'PRON', 'ADV', 'ADP', 'VERB', 'ADJ', 'INTJ'
+    ]
 
+    # TODO: use spacy for other languages 
     for doc in documents:
         tokens = tokenize(text=doc, remove_stopwords=remove_stopwords, lang=lang)
         if lang == 'ru':
@@ -358,6 +377,30 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
             for i in range(len(tags)):
                 if tags[i][1] in nltk_tags:
                     lex_items.append((tokens[i], tags[i][1]))
+        elif lang == 'de':
+            nlp = spacy.load("de_core_news_sm")
+            #nlp.tokenizer = nlp.tokenizer.tokens_from_list
+            # TODO: always use comparison to predefined tags? 
+            # TODO: this does not used the pre-tokenized sentence!
+            tags = nlp(doc)
+            for tag in tags:
+                if tag.pos_ in spacy_tags:
+                    lex_items.append((tag.text, tag.pos_))
+        elif lang == 'fr':
+            nlp = spacy.load("fr_core_news_sm")
+            tags = nlp(doc)
+            for tag in tags:
+                if tag.pos_ in spacy_tags:
+                    lex_items.append((tag.text, tag.pos_))
+        elif lang == 'es':
+            nlp = spacy.load("es_core_news_sm")
+            tags = nlp(doc)
+            for tag in tags:
+                if tag.pos_ in spacy_tags:
+                    lex_items.append((tag.text, tag.pos_))
+        else:
+            raise ValueError("Language " + lang + " is not supported!")
+
     return lex_items
 
 
