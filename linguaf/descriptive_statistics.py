@@ -6,6 +6,7 @@ import string
 import pyphen
 import spacy
 from spacy.lang.de.examples import sentences
+from spacy.cli.download import download
 import pymorphy2
 from nltk import word_tokenize, pos_tag
 import nltk
@@ -377,7 +378,7 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
                 if tags[i][1] in nltk_tags:
                     lex_items.append((tokens[i], tags[i][1]))
         elif lang == 'de':
-            nlp = spacy.load("de_core_news_sm")
+            nlp = load_spacy_language_model('de_core_news_sm')
             #nlp.tokenizer = nlp.tokenizer.tokens_from_list
             # TODO: always use comparison to predefined tags? 
             # TODO: this does not used the pre-tokenized sentence!
@@ -386,13 +387,13 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
                 if tag.pos_ in spacy_tags:
                     lex_items.append((tag.text, tag.pos_))
         elif lang == 'fr':
-            nlp = spacy.load("fr_core_news_sm")
+            nlp = load_spacy_language_model('fr_core_news_sm')
             tags = nlp(doc)
             for tag in tags:
                 if tag.pos_ in spacy_tags:
                     lex_items.append((tag.text, tag.pos_))
         elif lang == 'es':
-            nlp = spacy.load("es_core_news_sm")
+            nlp = load_spacy_language_model('es_core_news_sm')
             tags = nlp(doc)
             for tag in tags:
                 if tag.pos_ in spacy_tags:
@@ -401,6 +402,17 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
             raise ValueError("Language " + lang + " is not supported!")
 
     return lex_items
+
+
+def load_spacy_language_model(model: str):
+    try:
+        nlp = spacy.load(model)
+    except OSError:
+        LOGGER.warn('Could not find language model "' + model + '".\n'
+            'Downloading language model for the spaCy POS tagger\n')
+        download(model)
+        nlp = spacy.load(model)
+    return nlp
 
 
 def avg_words_per_sentence(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> list:
