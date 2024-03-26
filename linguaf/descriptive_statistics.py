@@ -4,7 +4,6 @@ import re
 import pathlib
 import string
 import pyphen
-import zhon
 import spacy
 from spacy.lang.de.examples import sentences
 import pymorphy2
