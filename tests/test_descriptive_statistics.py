@@ -590,9 +590,15 @@ def test_get_lexical_items():
     ]
 
     lexical_items_zh_data = [
-        (["大家好, 我是亚历山大. 我是这个库的创建者.", "玩得开心"], []),
-        (["见"], []),
-        (["你好, 是我","你好吗? 好!"], [])
+        (["大家好, 我是亚历山大. 我是这个库的创建者.", "玩得开心"],
+         [('大家', 'PRON'), ('好', 'VERB'), ('我', 'PRON'), ('是', 'VERB'), ('亚历山大', 'PROPN'),
+          ('我', 'PRON'), ('是', 'VERB',), ('这个', 'DET'), ('库', 'NOUN'), ('的', 'PART'),
+          ('创建者', 'NOUN'), ('玩', 'VERB'), ('得', 'PART'), ('开心', 'VERB')]),
+        (["见"],
+         [('见', 'VERB')]),
+        (["你好, 是我","你好吗? 好!"],
+         [('你好', 'VERB'), ('是', 'VERB'), ('我', 'PRON'), ('你好', 'VERB'), ('吗', 'PART'),
+          ('好', 'VERB') ])
     ]
 
     check_lexical_items(lexical_items_ru_data, 'ru')
@@ -600,8 +606,10 @@ def test_get_lexical_items():
     check_lexical_items(lexical_items_de_data, 'de')
     check_lexical_items(lexical_items_fr_data, 'fr')
     check_lexical_items(lexical_items_es_data, 'es')
-    with pytest.raises(ValueError):
-        check_lexical_items(lexical_items_zh_data, 'zh')
+    check_lexical_items(lexical_items_zh_data, 'zh')
+    # test for unsupported langs
+#     with pytest.raises(ValueError):
+#         check_lexical_items(lexical_items_zh_data, 'zh')
 
 # helper function for test_get_lexical_items
 def check_lexical_items(lexical_items, lang):

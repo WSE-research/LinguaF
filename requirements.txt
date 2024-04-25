@@ -4,3 +4,5 @@ setuptools
 natasha
 Pyphen
 pymorphy2
+pytest
+pytest-env

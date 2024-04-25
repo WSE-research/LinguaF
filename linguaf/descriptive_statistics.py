@@ -359,7 +359,7 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
     ]
     spacy_tags = [
         # TODO: do we want punct tags? 
-        'NOUN', 'AUX', 'PROPN', 'DET', 'PRON', 'ADV', 'ADP', 'VERB', 'ADJ', 'INTJ'
+        'NOUN', 'AUX', 'PROPN', 'DET', 'PRON', 'ADV', 'ADP', 'VERB', 'ADJ', 'INTJ', 'PART'
     ]
 
     # TODO: use spacy for other languages 
@@ -394,6 +394,12 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
                     lex_items.append((tag.text, tag.pos_))
         elif lang == 'es':
             nlp = load_spacy_language_model('es_core_news_sm')
+            tags = nlp(doc)
+            for tag in tags:
+                if tag.pos_ in spacy_tags:
+                    lex_items.append((tag.text, tag.pos_))
+        elif lang == 'zh':
+            nlp = load_spacy_language_model('zh_core_web_sm')
             tags = nlp(doc)
             for tag in tags:
                 if tag.pos_ in spacy_tags:
