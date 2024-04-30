@@ -6,3 +6,4 @@ Pyphen
 pymorphy2
 pytest
 pytest-env
+stopwordsiso

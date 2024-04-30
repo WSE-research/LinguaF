@@ -1,3 +1,4 @@
+import stopwordsiso
 import logging
 import os
 import re
@@ -29,12 +30,24 @@ STOPWORDS = dict()
 
 
 for language in SUPPORTED_LANGS:
-    STOPWORDS[language] = __load_json(
-        os.path.join(pathlib.Path(__file__).parent.absolute(),
-                     "resources",
-                     "stopwords",
-                     f"{language}.json")
-    )
+    try:
+        # TODO: consider using nltk directly
+        # get stopwords from local files 
+        STOPWORDS[language] = __load_json(
+            os.path.join(pathlib.Path(__file__).parent.absolute(),
+                         "resources",
+                         "stopwords",
+                         f"{language}.json")
+        )
+        LOGGER.debug(f"Reading stopwords for language \"{language}\" from local file")
+    except FileNotFoundError as e:
+        # get stopwords from stopwordsiso lib
+        if stopwordsiso.has_lang(language):
+            LOGGER.debug(f"No local stopword file found for language \"{language}\"")
+            STOPWORDS[language] = stopwordsiso.stopwords(language)
+            LOGGER.debug(f"Reading stopwords for language \"{language}\" from stopwordsiso library")
+        else:
+            raise Exception(f"No stopwords could be found for language \"{language}\"")
 
 
 def remove_punctuation(text: str) -> str:

@@ -1,7 +1,7 @@
 import json
 
-SUPPORTED_LANGS = ['en', 'ru', 'de', 'fr', 'es', 'zh'] # new
-                   # "lt", "be", "uk", "hy" # no stopwords from nltk!
+SUPPORTED_LANGS = ['en', 'ru', 'de', 'fr', 'es', 'zh', # stopwords from nltk
+                   'lt', 'be', 'uk', 'hy'] # stopwords from other sources
 __version__ = '0.1.0'
 
 
