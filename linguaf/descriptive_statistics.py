@@ -144,7 +144,7 @@ def syllable_count(words: list, lang: str = 'en') -> int:
     words -- the list of words
     lang -- language of the words
     """
-    lang_blacklist = ['zh']
+    lang_blacklist = ['zh', 'hy']
     if lang in lang_blacklist:
         raise ValueError(f"Syllable counting is currently not supported for the language " + lang + ".")
         # TODO: chinese does have syllables! so this should be supported eventually
@@ -170,7 +170,7 @@ def number_of_n_syllable_words(documents: list, lang: str = 'en', n: tuple = (1,
     __check_lang_param(lang)
 
     # TODO: refactor duplicate code!
-    lang_blacklist = ['zh']
+    lang_blacklist = ['zh', 'hy']
     if lang in lang_blacklist:
         raise ValueError(f"Syllable counting is currently not supported for the language " + lang + ".")
         # TODO: chinese does have syllables! so this should be supported eventually
@@ -372,13 +372,19 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
     ]
     spacy_tags = [
         # TODO: do we want punct tags? 
-        'NOUN', 'AUX', 'PROPN', 'DET', 'PRON', 'ADV', 'ADP', 'VERB', 'ADJ', 'INTJ', 'PART'
+        'NOUN', 'AUX', 'PROPN', 'DET', 'PRON', 'ADV', 'ADP', 'VERB', 'ADJ', 'INTJ', 'PART', 'SCONJ'
     ]
 
     # TODO: use spacy for other languages 
     for doc in documents:
         tokens = tokenize(text=doc, remove_stopwords=remove_stopwords, lang=lang)
         if lang == 'ru':
+            tags = [morph.parse(token)[0].tag.POS for token in tokens]
+
+            for i in range(len(tags)):
+                if tags[i] in morphy_tags:
+                    lex_items.append((tokens[i], tags[i]))
+        elif lang == 'uk':
             tags = [morph.parse(token)[0].tag.POS for token in tokens]
 
             for i in range(len(tags)):
@@ -413,6 +419,12 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
                     lex_items.append((tag.text, tag.pos_))
         elif lang == 'zh':
             nlp = load_spacy_language_model('zh_core_web_sm')
+            tags = nlp(doc)
+            for tag in tags:
+                if tag.pos_ in spacy_tags:
+                    lex_items.append((tag.text, tag.pos_))
+        elif lang == 'lt':
+            nlp = load_spacy_language_model('lt_core_news_sm')
             tags = nlp(doc)
             for tag in tags:
                 if tag.pos_ in spacy_tags:

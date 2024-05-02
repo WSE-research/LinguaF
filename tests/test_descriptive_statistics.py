@@ -176,9 +176,77 @@ def test_tokenize_stopwords():
          ['你好吗', '?', '好', '!'])
     ]
     #Lithuanian
-    #Belarusian
+    lt_tokens = [
+        ("Sveiki, aš esu Aleksandras! Aš esu šios bibliotekos kūrėjas.",
+         12,
+         ["Sveiki", ",", "aš", "esu", "Aleksandras", "!", "Aš", "esu", "šios", "bibliotekos", "kūrėjas", "."]),
+        ("Mėgaukitės jo naudojimu!",
+         4,
+         ["Mėgaukitės", "jo", "naudojimu", "!"]),
+        ("Iki",
+         1,
+         ["Iki"]),
+        ("Sveiki...tai aš...",
+         5,
+         ["Sveiki", "...", "tai", "aš", "..."]),
+        ("Kaip sekasi? Gerai!",
+         5,
+         ["Kaip", "sekasi", "?", "Gerai", "!"])
+    ]
     #Ukrainian
+    uk_tokens = [
+        ("Привіт, я Александр! Я творець цієї бібліотеки.",
+         10,
+         ["Привіт", ",", "я", "Александр", "!", "Я", "творець", "цієї", "бібліотеки", "."]),
+        ("Приємного користування!",
+         3,
+         ["Приємного", "користування", "!"]),
+        ("Бувай",
+         1,
+         ["Бувай"]),
+        ("Привіт...це я...",
+         5,
+         ["Привіт", "...", "це", "я", "..."]),
+        ("Як справи? Добре!",
+         5,
+         ["Як", "справи", "?", "Добре", "!"])
+    ]
+    #Belarusian
+    be_tokens = [
+        ("Добры дзень, я Аляксандр! Я стваральнік гэтай бібліятэкі.",
+         11,
+         ["Добры", "дзень", ",", "я", "Аляксандр", "!", "Я", "стваральнік", "гэтай", "бібліятэкі", "."]),
+        ("Прыемнага выкарыстання!",
+         3,
+         ["Прыемнага", "выкарыстання", "!"]),
+        ("Бывай",
+         1,
+         ["Бывай"]),
+        ("Прывітанне...гэта я...",
+         5,
+         ["Прывітанне", "...", "гэта", "я", "..."]),
+        ("Як ты? Добра!",
+         5,
+         ["Як", "ты", "?", "Добра", "!"])
+    ]
     #Armenian
+    hy_tokens = [
+        ("Բարև, ես Ալեքսանդրն եմ: Ես այս գրադարանի ստեղծողն եմ:",
+         12,
+         ["Բարև", ",", "ես", "Ալեքսանդրն", "եմ", ":", "Ես", "այս", "գրադարանի", "ստեղծողն", "եմ", ":"]),
+        ("Վայելեք այն օգտագործելը:",
+         4,
+         ["Վայելեք", "այն", "օգտագործելը", ":"]),
+        ("Ցտեսություն",
+         1,
+         ["Ցտեսություն"]),
+        ("Բարև...ես եմ...",
+         5,
+         ["Բարև", "...", "ես", "եմ", "..."]),
+        ("Ինչպես ես? Լավ!",
+         5,
+         ["Ինչպես", "ես", "?", "Լավ", "!"])
+    ]
 
     check_tokenization(en_tokens, 'en')
     check_tokenization(ru_tokens, 'ru')
@@ -186,6 +254,10 @@ def test_tokenize_stopwords():
     check_tokenization(fr_tokens, 'fr')
     check_tokenization(es_tokens, 'es')
     check_tokenization(zh_tokens, 'zh')
+    check_tokenization(lt_tokens, 'lt')
+    check_tokenization(uk_tokens, 'uk')
+    check_tokenization(be_tokens, 'be')
+    check_tokenization(hy_tokens, 'hy')
 
 
 
@@ -378,9 +450,77 @@ def test_get_words():
          ['你好吗', '好'])
     ]
     #Lithuanian
-    #Belarusian
+    lt_words = [
+        (["Sveiki, aš esu Aleksandras! Aš esu šios bibliotekos kūrėjas."],
+         9,
+         ["Sveiki", "aš", "esu", "Aleksandras", "Aš", "esu", "šios", "bibliotekos", "kūrėjas"]),
+        (["Mėgaukitės jo naudojimu!"],
+         3,
+         ["Mėgaukitės", "jo", "naudojimu"]),
+        (["Iki"],
+         1,
+         ["Iki"]),
+        (["Sveiki...tai aš..."],
+         3,
+         ["Sveiki", "tai", "aš"]),
+        (["Kaip sekasi? Gerai!"],
+         3,
+         ["Kaip", "sekasi", "Gerai"])
+    ]
     #Ukrainian
+    uk_words = [
+        (["Привіт, я Александр! Я творець цієї бібліотеки."],
+         7,
+         ["Привіт", "я", "Александр", "Я", "творець", "цієї", "бібліотеки"]),
+        (["Приємного користування!"],
+         2,
+         ["Приємного", "користування"]),
+        (["Бувай"],
+         1,
+         ["Бувай"]),
+        (["Привіт...це я..."],
+         3,
+         ["Привіт", "це", "я"]),
+        (["Як справи? Добре!"],
+         3,
+         ["Як", "справи", "Добре"])
+    ]
+    #Belarusian
+    be_words = [
+        (["Добры дзень, я Аляксандр! Я стваральнік гэтай бібліятэкі."],
+         8,
+         ["Добры", "дзень", "я", "Аляксандр", "Я", "стваральнік", "гэтай", "бібліятэкі"]),
+        (["Прыемнага выкарыстання!"],
+         2,
+         ["Прыемнага", "выкарыстання"]),
+        (["Бывай"],
+         1,
+         ["Бывай"]),
+        (["Прывітанне...гэта я..."],
+         3,
+         ["Прывітанне", "гэта", "я"]),
+        (["Як ты? Добра!"],
+         3,
+         ["Як", "ты", "Добра"])
+    ]
     #Armenian
+    hy_words = [
+        (["Բարև, ես Ալեքսանդրն եմ: Ես այս գրադարանի ստեղծողն եմ:"],
+         9,
+         ["Բարև", "ես", "Ալեքսանդրն", "եմ", "Ես", "այս", "գրադարանի", "ստեղծողն", "եմ"]),
+        (["Վայելեք այն օգտագործելը:"],
+         3,
+         ["Վայելեք", "այն", "օգտագործելը"]),
+        (["Ցտեսություն"],
+         1,
+         ["Ցտեսություն"]),
+        (["Բարև...ես եմ..."],
+         3,
+         ["Բարև", "ես", "եմ"]),
+        (["Ինչպես ես? Լավ!"],
+         3,
+         ["Ինչպես", "ես", "Լավ"])
+    ]
 
     check_found_words(ru_words, 'ru')
     check_found_words(en_words, 'en')
@@ -388,6 +528,11 @@ def test_get_words():
     check_found_words(fr_words, 'fr')
     check_found_words(es_words, 'es')
     check_found_words(zh_words, 'zh')
+
+    check_found_words(lt_words, 'lt')
+    check_found_words(uk_words, 'uk')
+    check_found_words(be_words, 'be')
+    check_found_words(hy_words, 'hy')
 
 
 # helper function for test_get_words
@@ -504,15 +649,37 @@ def test_avg_syllable_per_word():
     ]
     #Chinese (mt)
     avg_syllables_per_word_zh = [
-#        (["大家好，我是亚历山大。 我是这个库的创建者"],
-#         2,
-#         ['大家好，我是亚历山大。', '我是这个库的创建者']),
-#        # first two words counted as one? 
-#        # languge-specific signs? 
-#        # => alternative:
+        # syllable counting is currently not supported.
+        # instead, this tests for an exception
         (["大家好, 我是亚历山大. 我是这个库的创建者.", "玩得开心"], 0),
         (["见"], 1),
         (["你好, 是我","你好吗? 好!"], 0)
+    ]
+    #Lithuanian
+    avg_syllables_per_word_lt = [
+        (["Sveiki, aš esu Aleksandras! Aš esu šios bibliotekos kūrėjas.", "Mėgaukitės jo naudojimu!"], 2),
+        (["Iki"], 1),
+        (["Sveiki...tai aš...", "Kaip sekasi? Gerai!"], 1)
+    ]
+    #Ukrainian
+    avg_syllables_per_word_uk = [
+        (["Привіт, я Александр! Я творець цієї бібліотеки.", "Приємного користування!"], 3),
+        (["Бувай"], 2),
+        (["Привіт...це я...", "Як справи? Добре!"], 1)
+    ]
+    #Belarusian
+    avg_syllables_per_word_be = [
+        (["Добры дзень, я Аляксандр! Я стваральнік гэтай бібліятэкі.", "Прыемнага выкарыстання!"], 3),
+        (["Бывай"], 2),
+        (["Прывітанне...гэта я...", "Як ты? Добра!"], 2)
+    ]
+    #Armenian
+    avg_syllables_per_word_hy = [
+        # armenian is also not supported
+        # test for an exception instead
+        (["Բարև, ես Ալեքսանդրն եմ: Ես այս գրադարանի ստեղծողն եմ:", "Վայելեք այն օգտագործելը:"], 0),
+        (["Ցտեսություն"], 0),
+        (["Բարև...ես եմ...", "Ինչպես ես? Լավ!"], 0)
     ]
 
     check_avg_syllable_per_word(avg_syllables_per_word_ru, 'ru')
@@ -520,9 +687,14 @@ def test_avg_syllable_per_word():
     check_avg_syllable_per_word(avg_syllables_per_word_de, 'de')
     check_avg_syllable_per_word(avg_syllables_per_word_fr, 'fr')
     check_avg_syllable_per_word(avg_syllables_per_word_es, 'es')
+    check_avg_syllable_per_word(avg_syllables_per_word_lt, 'lt')
+    check_avg_syllable_per_word(avg_syllables_per_word_uk, 'uk')
+    check_avg_syllable_per_word(avg_syllables_per_word_be, 'be')
     # chinese is not supported; it should raise a ValueError
     with pytest.raises(ValueError):
         check_avg_syllable_per_word(avg_syllables_per_word_zh, 'zh')
+    with pytest.raises(ValueError):
+        check_avg_syllable_per_word(avg_syllables_per_word_hy, 'hy')
 
 
 # helper function for test_avg_syllable_per_word
@@ -601,15 +773,59 @@ def test_get_lexical_items():
           ('好', 'VERB') ])
     ]
 
+    lexical_items_lt_data = [
+        (["Sveiki, aš esu Aleksandras! Aš esu šios bibliotekos kūrėjas.", "Mėgaukitės jo naudojimu!"],
+         [('Sveiki', 'ADJ'), ('aš','PRON'), ('esu', 'VERB'), ('Aleksandras', 'PROPN'),
+          ('Aš', 'PRON'), ('esu', 'AUX'), ('šios', 'DET'), ('bibliotekos', 'NOUN'),
+          ('kūrėjas', 'NOUN'), ('Mėgaukitės', 'NOUN'), ('jo', 'PRON'), ('naudojimu', 'NOUN')]),
+        (["Iki"],
+         [('Iki', 'ADP')]),
+        (["Sveiki...tai aš...", "Kaip sekasi? Gerai!"],
+         [('Sveiki', 'ADJ'), ('tai', 'PART'), ('aš', 'PRON'), ('Kaip', 'SCONJ'),
+          ('sekasi', 'VERB'), ('Gerai', 'ADV')])
+    ]
+
+    lexical_items_uk_data = [
+        (["Привіт, я Александр! Я творець цієї бібліотеки.", "Приємного користування!"],
+         [('Привіт', 'NOUN'), ('Александр', 'NOUN'), ('творець', 'NOUN'), ('бібліотеки', 'VERB'),
+          ('Приємного', 'ADVB'), ('користування', 'ADJS')]),
+        (["Бувай"],
+         [('Бувай', 'VERB')]),
+        (["Привіт...це я...", "Як справи? Добре!"],
+         [('Привіт', 'NOUN'), ('Як', 'NOUN'), ('справи', 'VERB'), ('Добре', 'NOUN')])
+    ]
+
+    lexical_items_be_data = [
+        (["Добры дзень, я Аляксандр! Я стваральнік гэтай бібліятэкі.", "Прыемнага выкарыстання!"],
+         []),
+        (["Бывай"],
+         []),
+        (["Прывітанне...гэта я...", "Як ты? Добра!"],
+         [])
+    ]
+
+    lexical_items_hy_data = [
+        (["Բարև, ես Ալեքսանդրն եմ: Ես այս գրադարանի ստեղծողն եմ:", "Վայելեք այն օգտագործելը:"],
+         []),
+        (["Ցտեսություն"],
+         []),
+        (["Բարև...ես եմ...", "Ինչպես ես? Լավ!"],
+         [])
+    ]
+
     check_lexical_items(lexical_items_ru_data, 'ru')
     check_lexical_items(lexical_items_en_data, 'en')
     check_lexical_items(lexical_items_de_data, 'de')
     check_lexical_items(lexical_items_fr_data, 'fr')
     check_lexical_items(lexical_items_es_data, 'es')
     check_lexical_items(lexical_items_zh_data, 'zh')
-    # test for unsupported langs
-#     with pytest.raises(ValueError):
-#         check_lexical_items(lexical_items_zh_data, 'zh')
+    check_lexical_items(lexical_items_lt_data, 'lt')
+    check_lexical_items(lexical_items_uk_data, 'uk')
+
+    with pytest.raises(ValueError):
+        check_lexical_items(lexical_items_hy_data, 'hy')
+    with pytest.raises(ValueError):
+        check_lexical_items(lexical_items_be_data, 'be')
 
 # helper function for test_get_lexical_items
 def check_lexical_items(lexical_items, lang):
