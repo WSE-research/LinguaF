@@ -144,13 +144,15 @@ def syllable_count(words: list, lang: str = 'en') -> int:
     words -- the list of words
     lang -- language of the words
     """
-    lang_blacklist = ['zh', 'hy']
-    if lang in lang_blacklist:
-        raise ValueError(f"Syllable counting is currently not supported for the language " + lang + ".")
-        # TODO: chinese does have syllables! so this should be supported eventually
-        # however, chinese does not support hyphenation, so the implementation below does not work for it! 
-
     __check_words_param(words)
+    __check_lang_param(lang)
+
+    unsupported_langs = ['zh', 'hy']
+    if lang in unsupported_langs:
+        raise ValueError(f"Syllable counting is currently not supported for the language " + lang + "!")
+        # TODO: chinese does have syllables! so this should be supported eventually
+        # however, chinese does not support hyphenation, so the implementation below does not work for it
+
     syl_count = 0
     dic = pyphen.Pyphen(lang=lang)  # TODO: match language
     for word in words:
@@ -170,9 +172,9 @@ def number_of_n_syllable_words(documents: list, lang: str = 'en', n: tuple = (1,
     __check_lang_param(lang)
 
     # TODO: refactor duplicate code!
-    lang_blacklist = ['zh', 'hy']
-    if lang in lang_blacklist:
-        raise ValueError(f"Syllable counting is currently not supported for the language " + lang + ".")
+    unsupported_langs = ['zh', 'hy']
+    if lang in unsupported_langs:
+        raise ValueError(f"Syllable counting is currently not supported for the language " + lang + "!")
         # TODO: chinese does have syllables! so this should be supported eventually
         # however, chinese does not support hyphenation, so the implementation below does not work for it! 
 
@@ -430,8 +432,7 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
                 if tag.pos_ in spacy_tags:
                     lex_items.append((tag.text, tag.pos_))
         else:
-            raise ValueError("Language " + lang + " is not supported!")
-
+            raise ValueError(f"POS tagging is currently not supported for language \"{lang}\"!")
     return lex_items
 
 
