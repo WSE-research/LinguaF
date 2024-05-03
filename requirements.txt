@@ -3,6 +3,6 @@ nltk==3.8.1
 pymorphy2==0.9.1
 Pyphen==0.14.0
 pytest==7.4.4
-setuptools==69.0.3
+setuptools==68.0.0
 spacy==3.7.4
 stopwordsiso==0.6.1
