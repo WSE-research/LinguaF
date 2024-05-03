@@ -440,7 +440,7 @@ def load_spacy_language_model(model: str):
     try:
         nlp = spacy.load(model)
     except OSError:
-        LOGGER.warn('Could not find language model "' + model + '".\n'
+        LOGGER.info('Could not find language model "' + model + '".\n'
             'Downloading language model for the spaCy POS tagger\n')
         download(model)
         nlp = spacy.load(model)
