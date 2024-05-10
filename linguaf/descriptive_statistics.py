@@ -1,8 +1,13 @@
+import stopwordsiso
+import logging
 import os
 import re
 import pathlib
 import string
 import pyphen
+import spacy
+from spacy.lang.de.examples import sentences
+from spacy.cli.download import download
 import pymorphy2
 from nltk import word_tokenize, pos_tag
 import nltk
@@ -10,6 +15,8 @@ import collections
 from linguaf import SUPPORTED_LANGS, __load_json, __check_bool_param, __check_documents_param, __check_lang_param, \
     __check_text_param, __check_words_param
 
+
+LOGGER = logging.getLogger(__name__)
 
 try:
     nltk.data.find('tokenizers/punkt')
@@ -23,12 +30,24 @@ STOPWORDS = dict()
 
 
 for language in SUPPORTED_LANGS:
-    STOPWORDS[language] = __load_json(
-        os.path.join(pathlib.Path(__file__).parent.absolute(),
-                     "resources",
-                     "stopwords",
-                     f"{language}.json")
-    )
+    try:
+        # TODO: consider using nltk directly
+        # get stopwords from local files 
+        STOPWORDS[language] = __load_json(
+            os.path.join(pathlib.Path(__file__).parent.absolute(),
+                         "resources",
+                         "stopwords",
+                         f"{language}.json")
+        )
+        LOGGER.debug(f"Reading stopwords for language \"{language}\" from local file")
+    except FileNotFoundError as e:
+        # get stopwords from stopwordsiso lib
+        if stopwordsiso.has_lang(language):
+            LOGGER.debug(f"No local stopword file found for language \"{language}\"")
+            STOPWORDS[language] = stopwordsiso.stopwords(language)
+            LOGGER.debug(f"Reading stopwords for language \"{language}\" from stopwordsiso library")
+        else:
+            raise Exception(f"No stopwords could be found for language \"{language}\"")
 
 
 def remove_punctuation(text: str) -> str:
@@ -126,6 +145,14 @@ def syllable_count(words: list, lang: str = 'en') -> int:
     lang -- language of the words
     """
     __check_words_param(words)
+    __check_lang_param(lang)
+
+    unsupported_langs = ['zh', 'hy']
+    if lang in unsupported_langs:
+        raise ValueError(f"Syllable counting is currently not supported for the language " + lang + "!")
+        # TODO: chinese does have syllables! so this should be supported eventually
+        # however, chinese does not support hyphenation, so the implementation below does not work for it
+
     syl_count = 0
     dic = pyphen.Pyphen(lang=lang)  # TODO: match language
     for word in words:
@@ -143,6 +170,13 @@ def number_of_n_syllable_words(documents: list, lang: str = 'en', n: tuple = (1,
     """
     __check_documents_param(documents)
     __check_lang_param(lang)
+
+    # TODO: refactor duplicate code!
+    unsupported_langs = ['zh', 'hy']
+    if lang in unsupported_langs:
+        raise ValueError(f"Syllable counting is currently not supported for the language " + lang + "!")
+        # TODO: chinese does have syllables! so this should be supported eventually
+        # however, chinese does not support hyphenation, so the implementation below does not work for it! 
 
     words = get_words(documents, lang, remove_stopwords)
     if n[0] < 1 or n[1] <= n[0]:
@@ -338,10 +372,21 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
     morphy_tags = [
         'NOUN', 'ADJF', 'ADJS', 'VERB', 'INFN', 'ADVB'
     ]
+    spacy_tags = [
+        # TODO: do we want punct tags? 
+        'NOUN', 'AUX', 'PROPN', 'DET', 'PRON', 'ADV', 'ADP', 'VERB', 'ADJ', 'INTJ', 'PART', 'SCONJ'
+    ]
 
+    # TODO: use spacy for other languages 
     for doc in documents:
         tokens = tokenize(text=doc, remove_stopwords=remove_stopwords, lang=lang)
         if lang == 'ru':
+            tags = [morph.parse(token)[0].tag.POS for token in tokens]
+
+            for i in range(len(tags)):
+                if tags[i] in morphy_tags:
+                    lex_items.append((tokens[i], tags[i]))
+        elif lang == 'uk':
             tags = [morph.parse(token)[0].tag.POS for token in tokens]
 
             for i in range(len(tags)):
@@ -353,7 +398,53 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
             for i in range(len(tags)):
                 if tags[i][1] in nltk_tags:
                     lex_items.append((tokens[i], tags[i][1]))
+        elif lang == 'de':
+            nlp = load_spacy_language_model('de_core_news_sm')
+            #nlp.tokenizer = nlp.tokenizer.tokens_from_list
+            # TODO: always use comparison to predefined tags? 
+            # TODO: this does not used the pre-tokenized sentence!
+            tags = nlp(doc)
+            for tag in tags:
+                if tag.pos_ in spacy_tags:
+                    lex_items.append((tag.text, tag.pos_))
+        elif lang == 'fr':
+            nlp = load_spacy_language_model('fr_core_news_sm')
+            tags = nlp(doc)
+            for tag in tags:
+                if tag.pos_ in spacy_tags:
+                    lex_items.append((tag.text, tag.pos_))
+        elif lang == 'es':
+            nlp = load_spacy_language_model('es_core_news_sm')
+            tags = nlp(doc)
+            for tag in tags:
+                if tag.pos_ in spacy_tags:
+                    lex_items.append((tag.text, tag.pos_))
+        elif lang == 'zh':
+            nlp = load_spacy_language_model('zh_core_web_sm')
+            tags = nlp(doc)
+            for tag in tags:
+                if tag.pos_ in spacy_tags:
+                    lex_items.append((tag.text, tag.pos_))
+        elif lang == 'lt':
+            nlp = load_spacy_language_model('lt_core_news_sm')
+            tags = nlp(doc)
+            for tag in tags:
+                if tag.pos_ in spacy_tags:
+                    lex_items.append((tag.text, tag.pos_))
+        else:
+            raise ValueError(f"POS tagging is currently not supported for language \"{lang}\"!")
     return lex_items
+
+
+def load_spacy_language_model(model: str):
+    try:
+        nlp = spacy.load(model)
+    except OSError:
+        LOGGER.info('Could not find language model "' + model + '".\n'
+            'Downloading language model for the spaCy POS tagger\n')
+        download(model)
+        nlp = spacy.load(model)
+    return nlp
 
 
 def avg_words_per_sentence(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> list:

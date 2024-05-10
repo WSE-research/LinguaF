@@ -1,7 +1,8 @@
 import json
 
-SUPPORTED_LANGS = ['en', 'ru']
-__version__ = '0.1.0'
+SUPPORTED_LANGS = ['en', 'ru', 'de', 'fr', 'es', 'zh', # stopwords from nltk
+                   'lt', 'be', 'uk', 'hy'] # stopwords from other sources
+__version__ = '0.1.1'
 
 
 def __load_json(filepath):
