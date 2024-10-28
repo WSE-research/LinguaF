@@ -8,7 +8,7 @@ import pyphen
 import spacy
 from spacy.lang.de.examples import sentences
 from spacy.cli.download import download
-import pymorphy2
+import pymorphy3
 from nltk import word_tokenize, pos_tag
 import nltk
 import collections
@@ -360,7 +360,7 @@ def get_lexical_items(documents: list, remove_stopwords: bool = False, lang: str
     __check_lang_param(lang)
     __check_bool_param(remove_stopwords)
 
-    morph = pymorphy2.MorphAnalyzer()
+    morph = pymorphy3.MorphAnalyzer()
 
     lex_items = list()
     nltk_tags = [
