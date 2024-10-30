@@ -195,14 +195,11 @@ def number_of_n_syllable_words_all(documents: list, lang: str = 'en', remove_sto
 
     words = get_words(documents, lang, remove_stopwords)
 
-    counts = {}
+    counts = collections.defaultdict(int)
     dic = pyphen.Pyphen(lang=lang)  # TODO: match language
     for word in words:
         syl_cnt = len(dic.inserted(word).split('-'))
-        if syl_cnt in counts:
-            counts[syl_cnt] += 1
-        else:
-            counts[syl_cnt] = 1
+        counts[syl_cnt] += 1
     return counts
 
 
