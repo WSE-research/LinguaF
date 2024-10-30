@@ -27,6 +27,7 @@ The following descriptive statistics are supported (`descriptive_statistics.py` 
 * Number of syllables `syllable_count`
 * Number of sentences `sentence_count`
 * Number of n-syllable words `number_of_n_syllable_words`
+* Number of n-syllable words for all found syllables `number_of_n_syllable_words_all`
 * Average syllables per word `avg_syllable_per_word`
 * Average word length `avg_word_length`
 * Average sentence length `avg_sentence_length`
