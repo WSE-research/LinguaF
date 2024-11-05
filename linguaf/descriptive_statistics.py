@@ -15,7 +15,6 @@ import collections
 from linguaf import SUPPORTED_LANGS, __load_json, __check_bool_param, __check_documents_param, __check_lang_param, \
     __check_text_param, __check_words_param
 
-
 LOGGER = logging.getLogger(__name__)
 
 try:
@@ -27,7 +26,6 @@ except:
 
 PUNCTUATION = r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~—«»"""
 STOPWORDS = dict()
-
 
 for language in SUPPORTED_LANGS:
     try:
@@ -171,25 +169,38 @@ def number_of_n_syllable_words(documents: list, lang: str = 'en', n: tuple = (1,
     __check_documents_param(documents)
     __check_lang_param(lang)
 
+    counts = number_of_n_syllable_words_all(documents, lang, remove_stopwords)
+    count = 0
+    for i in range(n[0], n[1]):
+        count += counts.get(i, 0)
+    return count
+
+
+def number_of_n_syllable_words_all(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> dict:
+    """Count each found number of syllables in a list of words.
+
+    Keyword arguments:
+    documents -- the list of documents
+    lang -- language of the words
+    """
+    __check_documents_param(documents)
+    __check_lang_param(lang)
+
     # TODO: refactor duplicate code!
     unsupported_langs = ['zh', 'hy']
     if lang in unsupported_langs:
         raise ValueError(f"Syllable counting is currently not supported for the language " + lang + "!")
         # TODO: chinese does have syllables! so this should be supported eventually
-        # however, chinese does not support hyphenation, so the implementation below does not work for it! 
+        # however, chinese does not support hyphenation, so the implementation below does not work for it!
 
     words = get_words(documents, lang, remove_stopwords)
-    if n[0] < 1 or n[1] <= n[0]:
-        raise ValueError(f"The given n parameter isn't correct: {n}. n=tuple(x,y), x>0, y>x.")
 
-    count = 0
+    counts = collections.defaultdict(int)
     dic = pyphen.Pyphen(lang=lang)  # TODO: match language
     for word in words:
         syl_cnt = len(dic.inserted(word).split('-'))
-        for i in range(n[0], n[1]):
-            if syl_cnt == i:
-                count += 1
-    return count
+        counts[syl_cnt] += 1
+    return counts
 
 
 def get_words(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> list:
