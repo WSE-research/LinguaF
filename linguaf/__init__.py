@@ -2,7 +2,7 @@ import json
 
 SUPPORTED_LANGS = ['en', 'ru', 'de', 'fr', 'es', 'zh', # stopwords from nltk
                    'lt', 'be', 'uk', 'hy'] # stopwords from other sources
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 
 def __load_json(filepath):

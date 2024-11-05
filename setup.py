@@ -21,7 +21,7 @@ def read_requirements():
 
 setuptools.setup(
     name="linguaf",
-    version="0.1.0",
+    version="0.1.2",
     author="Aleksandr Perevalov",
     author_email="perevalovproduction@gmail.com",
     description="Python package for calculating famous measures in computational linguistics",

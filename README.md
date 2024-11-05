@@ -48,7 +48,7 @@ Example:
 from linguaf import descriptive_statistics as ds
 
 
-ds.words_per_sentence(documents)
+ds.avg_words_per_sentence(documents)
 # Output: 15
 ```
 
@@ -64,7 +64,7 @@ from linguaf import syntactical_complexity as sc
 
 
 sc.mean_dependency_distance(documents)
-# Output: 2.307306255835668
+# Output: 2.375
 ```
 
 ### Lexical Diversity
@@ -83,7 +83,7 @@ from linguaf import lexical_diversity as ld
 
 
 ld.log_type_token_ratio(documents)
-# Output: 94.03574963462502
+# Output: 0.9403574963462502
 ```
 
 ### Readability
@@ -125,7 +125,19 @@ pip install .
 
 ## Language Support
 
-At the moment, library supports English and Russian languages for all the methods.
+At the moment, library supports the following languages:
+* English 🇬🇧 (`en`): full support
+* Russian 🇷🇺 (`ru`): full support
+* German 🇩🇪 (`de`)
+* French 🇫🇷 (`fr`)
+* Spanish 🇪🇸 (`es`)
+* Chinese 🇨🇳 (`zh`)
+* Lithuanian 🇱🇹 (`lt`)
+* Belarusian 🇧🇾 (`be`)
+* Ukrainian 🇺🇦 (`uk`)
+* Armenian 🇦🇲 (`hy`)
+
+**Important:** not every method is implemented for every language. If you use a particular method that does not support the input language, you'll get a `ValueError`.
 
 ## Citation
 

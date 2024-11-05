@@ -41,5 +41,7 @@ def mean_dependency_distance(documents: list, lang: str = 'en') -> float:
             doc = nlp(text)
             for token in doc:
                 dd += abs(token.head.i - token.i)
+        else:
+            raise ValueError("Syllable counting is currently not supported for the language " + lang + "!")
 
     return dd/(len(words) - len(sentences))
