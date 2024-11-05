@@ -26,6 +26,8 @@ def flesch_reading_ease(documents: list, lang: str = 'en', remove_stopwords: boo
         return 206.835 - 1.015*asl - 84.6*(syl_total/len(words))
     elif lang == 'ru':
         return 206.835 - 1.3*asl - 60.1*(syl_total/len(words))  # coefficients for russian
+    else:
+        raise ValueError("Syllable counting is currently not supported for the language " + lang + "!")
 
 
 def flesch_kincaid_grade(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
@@ -51,6 +53,8 @@ def flesch_kincaid_grade(documents: list, lang: str = 'en', remove_stopwords: bo
         return 0.39*asl + 11.8*(syl_total/len(words)) - 15.59
     elif lang == 'ru':
         return 0.5*asl + 8.4*(syl_total/len(words)) - 15.59  # coefficients for russian
+    else:
+        raise ValueError("Syllable counting is currently not supported for the language " + lang + "!")
 
 
 def automated_readability_index(documents: list, lang: str = 'en', remove_stopwords: bool = False) -> float:
