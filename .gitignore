@@ -129,3 +129,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.pytest_cache/
+.coverage
+coverage.xml
+pytest-report.xml
+htmlcov/
+dist/
+build/
+*.egg-info/

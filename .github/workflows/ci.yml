@@ -1,0 +1,70 @@
+# CI for LinguaF (replaces python-package.yml).
+# Adds a coverage gate and a dedicated end-to-end job to the existing test matrix.
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["*"]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install ruff
+      # Advisory for now: the library has pre-existing lint findings. Tighten to
+      # a blocking check (remove continue-on-error) once they are cleaned up.
+      - run: ruff check linguaf tests
+        continue-on-error: true
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+      - name: Unit tests with coverage gate (excludes e2e)
+        run: |
+          pytest tests -m "not e2e" \
+            --cov=linguaf --cov-report=term-missing --cov-report=xml \
+            --cov-fail-under=85 --junitxml=pytest-report.xml
+      - name: Upload coverage
+        if: always() && matrix.python-version == '3.11'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.xml
+          if-no-files-found: ignore
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+      - name: End-to-end pipeline tests
+        run: pytest tests/e2e -m e2e -v

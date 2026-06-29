@@ -1,0 +1,4 @@
+# Tooling for local development and CI.
+pytest-cov==5.0.0
+ruff==0.5.6
+build==1.2.1
